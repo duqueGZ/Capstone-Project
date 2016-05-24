@@ -23,3 +23,25 @@ This app is intended to TV series lovers, specially to those people who want to 
 - Mark (and consult) the series you are currently watching.  
 - Receive updated info about popular TV series.
 - Personally configure some application settings: default order used in the results screen, initial screen opened when starting the app, etc.
+
+## IMPORTANT
+
+In order to get WatchThemAll app correctly working is needed to configure and use a trakt.tv API KEY.  
+To get one, you must sign up for an account (https://trakt.tv/auth/join) and then register your own API app (https://trakt.tv/oauth/applications/new). This way, you will get a Client ID associated to your API app.  
+Since it is not allowed to publicly share your personal API KEY, the code in this repository does not contain mine. Therefore, it would be needed to replace *PLACE_HERE_YOUR_TRAKT_API_APP_CLIENT_ID* placeholder in app *build.gradle* file with your actual and valid trakt API app Client ID:
+  
+app/build.gradle:
+```gradle
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    ...
+    buildTypes.each {
+        it.buildConfigField 'String', 'TRAKT_API_KEY', '\"PLACE_HERE_YOUR_TRAKT_API_APP_CLIENT_ID\"'
+    }
+}
+...
+```
+
