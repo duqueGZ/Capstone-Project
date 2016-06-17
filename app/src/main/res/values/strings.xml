@@ -1,3 +1,7 @@
 <resources>
+    <!-- General -->
     <string name="app_name" translatable="false">WatchThemAll</string>
+
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type" translatable="false">watchthemall.android.nanodegree</string>
 </resources>

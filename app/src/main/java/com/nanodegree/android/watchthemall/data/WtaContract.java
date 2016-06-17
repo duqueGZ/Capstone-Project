@@ -42,7 +42,6 @@ public class WtaContract {
 
         public static final String TABLE_NAME = "show";
 
-        public static final String COLUMN_TRAKT_ID = "trakt_id";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_OVERVIEW = "overview";
         public static final String COLUMN_POSTER_PATH = "poster_path";
@@ -61,6 +60,7 @@ public class WtaContract {
         public static final String COLUMN_WATCHING = "watching";
         public static final String COLUMN_WATCHED = "watched";
         public static final String COLUMN_WATCHLIST = "watchlist";
+        public static final String COLUMN_WTA_UPDATE_DATE = "update_date";
 
         public static final String GENRE_RELATION_TABLE_NAME = "showgenre";
 
@@ -104,10 +104,7 @@ public class WtaContract {
 
         public static final String TABLE_NAME = "season";
 
-        public static final String COLUMN_TRAKT_ID = "trakt_id";
         public static final String COLUMN_NUMBER = "number";
-        public static final String COLUMN_RATING = "rating";
-        public static final String COLUMN_VOTE_COUNT = "vote_count";
         public static final String COLUMN_EPISODE_COUNT = "episode_count";
         public static final String COLUMN_AIRED_EPISODES = "aired_episodes";
         public static final String COLUMN_FIRST_AIRED = "first_aired";
@@ -141,7 +138,6 @@ public class WtaContract {
 
         public static final String TABLE_NAME = "episode";
 
-        public static final String COLUMN_TRAKT_ID = "trakt_id";
         public static final String COLUMN_NUMBER = "number";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_OVERVIEW = "overview";
@@ -150,6 +146,7 @@ public class WtaContract {
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_VOTE_COUNT = "vote_count";
         public static final String COLUMN_SEASON_ID = "season_id";
+        public static final String COLUMN_WATCHLIST = "watchlist";
 
         public static Uri buildEpisodeUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -179,7 +176,6 @@ public class WtaContract {
 
         public static final String TABLE_NAME = "comment";
 
-        public static final String COLUMN_TRAKT_ID = "trakt_id";
         public static final String COLUMN_CREATED_AT = "created_at";
         public static final String COLUMN_CONTENT = "content";
         public static final String COLUMN_SPOILER = "spoiler";
@@ -222,7 +218,6 @@ public class WtaContract {
         public static final String TABLE_NAME = "genre";
 
         public static final String COLUMN_NAME = "name";
-        public static final String COLUMN_SLUG = "slug";
 
         public static Uri buildGenreUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -252,7 +247,6 @@ public class WtaContract {
 
         public static final String TABLE_NAME = "person";
 
-        public static final String COLUMN_TRAKT_ID = "trakt_id";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_HEADSHOT_PATH = "headshot_path";
 

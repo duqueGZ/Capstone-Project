@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class WtaDbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "watch.them.all.db";
 
     public WtaDbHelper(Context context) {
@@ -22,7 +22,6 @@ public class WtaDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_SHOW_TABLE = "CREATE TABLE " +
                 WtaContract.ShowEntry.TABLE_NAME + " (" +
                 WtaContract.ShowEntry._ID + " INTEGER PRIMARY KEY," +
-                WtaContract.ShowEntry.COLUMN_TRAKT_ID + " INTEGER NOT NULL, " +
                 WtaContract.ShowEntry.COLUMN_TITLE + " TEXT, " +
                 WtaContract.ShowEntry.COLUMN_OVERVIEW + " TEXT, " +
                 WtaContract.ShowEntry.COLUMN_POSTER_PATH + " TEXT, " +
@@ -37,51 +36,56 @@ public class WtaDbHelper extends SQLiteOpenHelper {
                 WtaContract.ShowEntry.COLUMN_RATING + " REAL, " +
                 WtaContract.ShowEntry.COLUMN_VOTE_COUNT + " INTEGER, " +
                 WtaContract.ShowEntry.COLUMN_LANGUAGE + " TEXT, " +
-                WtaContract.ShowEntry.COLUMN_AIRED_EPISODES + " INTEGER " +
-                WtaContract.ShowEntry.COLUMN_WATCHING + " INTEGER " +
-                WtaContract.ShowEntry.COLUMN_WATCHED + " INTEGER " +
-                WtaContract.ShowEntry.COLUMN_WATCHLIST + " INTEGER " +
+                WtaContract.ShowEntry.COLUMN_AIRED_EPISODES + " INTEGER, " +
+                WtaContract.ShowEntry.COLUMN_WATCHING + " INTEGER, " +
+                WtaContract.ShowEntry.COLUMN_WATCHED + " INTEGER, " +
+                WtaContract.ShowEntry.COLUMN_WATCHLIST + " INTEGER, " +
+                WtaContract.ShowEntry.COLUMN_WTA_UPDATE_DATE + " INTEGER " +
                 ");";
 
         final String SQL_CREATE_SHOW_GENRE_TABLE = "CREATE TABLE " +
                 WtaContract.ShowEntry.GENRE_RELATION_TABLE_NAME + " (" +
-                WtaContract.ShowEntry._ID + " INTEGER PRIMARY KEY," +
                 WtaContract.ShowEntry.COLUMN_SHOW_ID + " INTEGER NOT NULL, " +
                 WtaContract.ShowEntry.COLUMN_GENRE_ID + " INTEGER NOT NULL, " +
+                " PRIMARY KEY (" + WtaContract.ShowEntry.COLUMN_SHOW_ID + ", " +
+                WtaContract.ShowEntry.COLUMN_GENRE_ID + "), " +
                 " FOREIGN KEY (" + WtaContract.ShowEntry.COLUMN_SHOW_ID + ") REFERENCES " +
-                WtaContract.ShowEntry.TABLE_NAME + " (" + WtaContract.ShowEntry._ID + "), " +
+                WtaContract.ShowEntry.TABLE_NAME + " (" + WtaContract.ShowEntry._ID + ") " +
+                " ON UPDATE CASCADE ON DELETE CASCADE, " +
                 " FOREIGN KEY (" + WtaContract.ShowEntry.COLUMN_GENRE_ID + ") REFERENCES " +
-                WtaContract.GenreEntry.TABLE_NAME + " (" + WtaContract.GenreEntry._ID + "));";
+                WtaContract.GenreEntry.TABLE_NAME + " (" + WtaContract.GenreEntry._ID + ") " +
+                " ON UPDATE CASCADE ON DELETE CASCADE);";
 
         final String SQL_CREATE_SHOW_PEOPLE_TABLE = "CREATE TABLE " +
                 WtaContract.ShowEntry.PERSON_RELATION_TABLE_NAME + " (" +
-                WtaContract.ShowEntry._ID + " INTEGER PRIMARY KEY," +
                 WtaContract.ShowEntry.COLUMN_SHOW_ID + " INTEGER NOT NULL, " +
                 WtaContract.ShowEntry.COLUMN_PERSON_ID + " INTEGER NOT NULL, " +
                 WtaContract.ShowEntry.COLUMN_CHARACTER + " TEXT, " +
+                " PRIMARY KEY (" + WtaContract.ShowEntry.COLUMN_SHOW_ID + ", " +
+                WtaContract.ShowEntry.COLUMN_PERSON_ID + ", " +
+                WtaContract.ShowEntry.COLUMN_CHARACTER + "), " +
                 " FOREIGN KEY (" + WtaContract.ShowEntry.COLUMN_SHOW_ID + ") REFERENCES " +
-                WtaContract.ShowEntry.TABLE_NAME + " (" + WtaContract.ShowEntry._ID + "), " +
+                WtaContract.ShowEntry.TABLE_NAME + " (" + WtaContract.ShowEntry._ID + ") " +
+                " ON UPDATE CASCADE ON DELETE CASCADE, " +
                 " FOREIGN KEY (" + WtaContract.ShowEntry.COLUMN_PERSON_ID + ") REFERENCES " +
-                WtaContract.PersonEntry.TABLE_NAME + " (" + WtaContract.PersonEntry._ID + "));";
+                WtaContract.PersonEntry.TABLE_NAME + " (" + WtaContract.PersonEntry._ID + ") " +
+                " ON UPDATE CASCADE ON DELETE CASCADE);";
 
         final String SQL_CREATE_SEASON_TABLE = "CREATE TABLE " +
                 WtaContract.SeasonEntry.TABLE_NAME + " (" +
                 WtaContract.SeasonEntry._ID + " INTEGER PRIMARY KEY," +
-                WtaContract.SeasonEntry.COLUMN_TRAKT_ID + " INTEGER NOT NULL, " +
                 WtaContract.SeasonEntry.COLUMN_NUMBER + " INTEGER NOT NULL, " +
-                WtaContract.SeasonEntry.COLUMN_RATING + " REAL, " +
-                WtaContract.SeasonEntry.COLUMN_VOTE_COUNT + " INTEGER, " +
                 WtaContract.SeasonEntry.COLUMN_EPISODE_COUNT + " INTEGER, " +
                 WtaContract.SeasonEntry.COLUMN_AIRED_EPISODES + " INTEGER, " +
                 WtaContract.SeasonEntry.COLUMN_FIRST_AIRED + " INTEGER, " +
                 WtaContract.SeasonEntry.COLUMN_SHOW_ID + " INTEGER NOT NULL, " +
                 " FOREIGN KEY (" + WtaContract.SeasonEntry.COLUMN_SHOW_ID + ") REFERENCES " +
-                WtaContract.ShowEntry.TABLE_NAME + " (" + WtaContract.ShowEntry._ID + "));";
+                WtaContract.ShowEntry.TABLE_NAME + " (" + WtaContract.ShowEntry._ID + ") " +
+                " ON UPDATE CASCADE ON DELETE CASCADE);";
 
         final String SQL_CREATE_EPISODE_TABLE = "CREATE TABLE " +
                 WtaContract.EpisodeEntry.TABLE_NAME + " (" +
                 WtaContract.EpisodeEntry._ID + " INTEGER PRIMARY KEY," +
-                WtaContract.EpisodeEntry.COLUMN_TRAKT_ID + " INTEGER NOT NULL, " +
                 WtaContract.EpisodeEntry.COLUMN_NUMBER + " INTEGER NOT NULL, " +
                 WtaContract.EpisodeEntry.COLUMN_TITLE + " TEXT, " +
                 WtaContract.EpisodeEntry.COLUMN_OVERVIEW + " TEXT, " +
@@ -90,13 +94,14 @@ public class WtaDbHelper extends SQLiteOpenHelper {
                 WtaContract.EpisodeEntry.COLUMN_RATING + " REAL, " +
                 WtaContract.EpisodeEntry.COLUMN_VOTE_COUNT + " INTEGER, " +
                 WtaContract.EpisodeEntry.COLUMN_SEASON_ID + " INTEGER NOT NULL, " +
+                WtaContract.EpisodeEntry.COLUMN_WATCHLIST + " INTEGER, " +
                 " FOREIGN KEY (" + WtaContract.EpisodeEntry.COLUMN_SEASON_ID + ") REFERENCES " +
-                WtaContract.SeasonEntry.TABLE_NAME + " (" + WtaContract.SeasonEntry._ID + "));";
+                WtaContract.SeasonEntry.TABLE_NAME + " (" + WtaContract.SeasonEntry._ID + ") " +
+                " ON UPDATE CASCADE ON DELETE CASCADE);";
 
         final String SQL_CREATE_COMMENT_TABLE = "CREATE TABLE " +
                 WtaContract.CommentEntry.TABLE_NAME + " (" +
                 WtaContract.CommentEntry._ID + " INTEGER PRIMARY KEY," +
-                WtaContract.CommentEntry.COLUMN_TRAKT_ID + " INTEGER NOT NULL, " +
                 WtaContract.CommentEntry.COLUMN_CREATED_AT + " INTEGER, " +
                 WtaContract.CommentEntry.COLUMN_CONTENT + " TEXT, " +
                 WtaContract.CommentEntry.COLUMN_SPOILER + " INTEGER DEFAULT 0 NOT NULL, " +
@@ -106,21 +111,21 @@ public class WtaDbHelper extends SQLiteOpenHelper {
                 WtaContract.CommentEntry.COLUMN_SHOW_ID+ " INTEGER, " +
                 WtaContract.CommentEntry.COLUMN_EPISODE_ID + " INTEGER, " +
                 " FOREIGN KEY (" + WtaContract.CommentEntry.COLUMN_SHOW_ID + ") REFERENCES " +
-                WtaContract.ShowEntry.TABLE_NAME + " (" + WtaContract.ShowEntry._ID + "), " +
+                WtaContract.ShowEntry.TABLE_NAME + " (" + WtaContract.ShowEntry._ID + ") " +
+                " ON UPDATE CASCADE ON DELETE CASCADE, " +
                 " FOREIGN KEY (" + WtaContract.CommentEntry.COLUMN_EPISODE_ID + ") REFERENCES " +
-                WtaContract.EpisodeEntry.TABLE_NAME + " (" + WtaContract.EpisodeEntry._ID + "));";
+                WtaContract.EpisodeEntry.TABLE_NAME + " (" + WtaContract.EpisodeEntry._ID + ") " +
+                " ON UPDATE CASCADE ON DELETE CASCADE);";
 
         final String SQL_CREATE_GENRE_TABLE = "CREATE TABLE " +
                 WtaContract.GenreEntry.TABLE_NAME + " (" +
-                WtaContract.GenreEntry._ID + " INTEGER PRIMARY KEY," +
+                WtaContract.GenreEntry._ID + " TEXT PRIMARY KEY," +
                 WtaContract.GenreEntry.COLUMN_NAME + " TEXT, " +
-                WtaContract.GenreEntry.COLUMN_SLUG + " TEXT " +
                 ");";
 
         final String SQL_CREATE_PERSON_TABLE = "CREATE TABLE " +
                 WtaContract.PersonEntry.TABLE_NAME + " (" +
                 WtaContract.PersonEntry._ID + " INTEGER PRIMARY KEY," +
-                WtaContract.PersonEntry.COLUMN_TRAKT_ID + " INTEGER NOT NULL, " +
                 WtaContract.PersonEntry.COLUMN_NAME + " TEXT, " +
                 WtaContract.PersonEntry.COLUMN_HEADSHOT_PATH + " TEXT " +
                 ");";

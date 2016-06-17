@@ -11,11 +11,17 @@ import android.support.annotation.NonNull;
 
 import com.nanodegree.android.watchthemall.util.Utility;
 
+/**
+ * A Content Provider for WatchThemAll show data
+ */
 public class WtaProvider extends ContentProvider {
 
     //"show._id = ?" selection String
     public static final String sShowSelection = WtaContract.ShowEntry.TABLE_NAME + "." +
             WtaContract.ShowEntry._ID + " = ? ";
+    //"show.update_date < ?" selection String
+    public static final String sShowsByUpdateDateSelection = WtaContract.ShowEntry.TABLE_NAME + "." +
+            WtaContract.ShowEntry.COLUMN_WTA_UPDATE_DATE + " < ?";
     //"season._id = ?" selection String
     public static final String sSeasonSelection = WtaContract.SeasonEntry.TABLE_NAME + "." +
             WtaContract.SeasonEntry._ID + " = ? ";
@@ -28,6 +34,9 @@ public class WtaProvider extends ContentProvider {
     //"genre._id = ?" selection String
     public static final String sGenreSelection = WtaContract.GenreEntry.TABLE_NAME + "." +
             WtaContract.GenreEntry._ID + " = ? ";
+    //"genre._id in (?)" selection String
+    public static final String sGenresByIdListSelection = WtaContract.GenreEntry.TABLE_NAME +
+            "." + WtaContract.GenreEntry._ID + " IN (?)";
     //"person._id = ?" selection String
     public static final String sPersonSelection = WtaContract.PersonEntry.TABLE_NAME + "." +
             WtaContract.PersonEntry._ID + " = ? ";
