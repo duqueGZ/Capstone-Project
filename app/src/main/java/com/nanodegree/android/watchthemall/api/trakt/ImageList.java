@@ -45,10 +45,10 @@ public class ImageList {
     @Override
     public String toString() {
         return "ImageList{" +
-                "screenshot=" + screenshot.toString() +
-                ", headshot=" + headshot.toString() +
-                ", poster=" + poster.toString() +
-                ", banner=" + banner.toString() +
+                "screenshot=" + ((screenshot==null)?null:screenshot.toString()) +
+                ", headshot=" + ((headshot==null)?null:headshot.toString()) +
+                ", poster=" + ((poster==null)?null:poster.toString()) +
+                ", banner=" + ((banner==null)?null:banner.toString()) +
                 '}';
     }
 }

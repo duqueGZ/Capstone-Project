@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/CustomMatchParentView"
+    android:id="@+id/detailRootView">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="com.nanodegree.android.watchthemall.ShowDetailFragment"
+        style="@style/CustomRootLayout"
+        android:orientation="vertical">
+
+        <FrameLayout
+            style="@style/CustomMatchParentView"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                style="@style/CustomLargeBoldTextView"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:id="@+id/showTitle" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            style="@style/CustomMatchParentView"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/CustomDetailImageView"
+                android:id="@+id/showPoster"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:layout_marginRight="15dp" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:layout_gravity="left">
+
+                <LinearLayout
+                    style="@style/CustomWrapContentView"
+                    android:orientation="horizontal">
+                    <TextView
+                        style="@style/CustomRatingTextView"
+                        android:id="@+id/showRating"
+                        android:layout_marginRight="10dp"/>
+                    <TextView
+                        style="@style/CustomSmallTextView"
+                        android:id="@+id/showVoteCount" />
+                </LinearLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+
+        <TextView
+            style="@style/CustomMediumBoldTextView"
+            android:id="@+id/showOverviewLabel"
+            android:layout_marginTop="15dp"
+            android:text="@string/overview_label"/>
+
+        <WebView
+            style="@style/CustomWrapContentView"
+            android:id="@+id/showOverview" />
+
+    </LinearLayout>
+</ScrollView>

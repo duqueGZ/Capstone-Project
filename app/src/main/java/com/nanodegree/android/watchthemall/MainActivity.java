@@ -1,17 +1,95 @@
 package com.nanodegree.android.watchthemall;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.nanodegree.android.watchthemall.sync.WtaSyncAdapter;
+import com.nanodegree.android.watchthemall.util.Utility;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
+
+    @BindView(R.id.search_keywords)
+    EditText mSearchKeywords;
+    @BindView(R.id.loading_spinner)
+    ProgressBar mLoadingSpinner;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.left_drawer)
+    ListView mDrawerList;
+
+    private String[] mNavigationDrawerOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
+        mNavigationDrawerOptions = getResources()
+                .getStringArray(R.array.main_navigation_drawer_options);
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
+                R.layout.main_drawer_list_item, mNavigationDrawerOptions));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         WtaSyncAdapter.initializeSyncAdapter(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mLoadingSpinner.setVisibility(View.INVISIBLE);
+    }
+
+    @OnClick(R.id.search_button)
+    public void searchShowsByKeywords(View view) {
+
+        String searchText = "";
+        if (mSearchKeywords.getText()!=null) {
+            searchText = mSearchKeywords.getText().toString();
+        }
+
+        if (!searchText.isEmpty()) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            mLoadingSpinner.setVisibility(View.VISIBLE);
+
+            Utility.updateShowsSearch(this, searchText);
+        } else {
+            Toast.makeText(this, getString(R.string.empty_search_keywords_error), Toast.LENGTH_LONG)
+                    .show();
+        }
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            if ((position!=ListView.INVALID_POSITION)&&(position<mNavigationDrawerOptions.length)) {
+                String selectedOption = mNavigationDrawerOptions[position];
+                if (selectedOption.equals(getString(R.string.action_settings))) {
+                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                }
+                if (selectedOption.equals(getString(R.string.action_about))) {
+                    startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                }
+            }
+            mDrawerList.setItemChecked(position, Boolean.FALSE);
+            mDrawerLayout.closeDrawer(mDrawerList);
+        }
     }
 }

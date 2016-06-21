@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class WtaDbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 8;
     private static final String DATABASE_NAME = "watch.them.all.db";
 
     public WtaDbHelper(Context context) {
@@ -40,7 +40,9 @@ public class WtaDbHelper extends SQLiteOpenHelper {
                 WtaContract.ShowEntry.COLUMN_WATCHING + " INTEGER, " +
                 WtaContract.ShowEntry.COLUMN_WATCHED + " INTEGER, " +
                 WtaContract.ShowEntry.COLUMN_WATCHLIST + " INTEGER, " +
-                WtaContract.ShowEntry.COLUMN_WTA_UPDATE_DATE + " INTEGER " +
+                WtaContract.ShowEntry.COLUMN_WTA_UPDATE_DATE + " INTEGER, " +
+                WtaContract.ShowEntry.COLUMN_LAST_SEARCH_RESULT + " INTEGER, " +
+                WtaContract.ShowEntry.COLUMN_SEARCH_SCORE + " REAL " +
                 ");";
 
         final String SQL_CREATE_SHOW_GENRE_TABLE = "CREATE TABLE " +
@@ -120,7 +122,7 @@ public class WtaDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_GENRE_TABLE = "CREATE TABLE " +
                 WtaContract.GenreEntry.TABLE_NAME + " (" +
                 WtaContract.GenreEntry._ID + " TEXT PRIMARY KEY," +
-                WtaContract.GenreEntry.COLUMN_NAME + " TEXT, " +
+                WtaContract.GenreEntry.COLUMN_NAME + " TEXT " +
                 ");";
 
         final String SQL_CREATE_PERSON_TABLE = "CREATE TABLE " +

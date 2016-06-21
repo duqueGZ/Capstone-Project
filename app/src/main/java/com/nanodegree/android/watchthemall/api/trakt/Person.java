@@ -37,8 +37,8 @@ public class Person {
     public String toString() {
         return "Person{" +
                 "name='" + name + '\'' +
-                ", images=" + images +
-                ", ids=" + ids +
+                ", images=" + ((images==null)?null:images.toString()) +
+                ", ids=" + ((ids==null)?null:ids.toString()) +
                 '}';
     }
 }

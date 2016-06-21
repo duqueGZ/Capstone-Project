@@ -1,0 +1,47 @@
+<resources>
+    <!-- Menus strings -->
+    <string name="action_settings">Ajustes</string>
+    <string name="action_share">Compartir</string>
+
+    <!-- Main activity (search screen) -->
+    <string name="search_hint">Introduce tu búsqueda aquí...</string>
+    <string name="empty_search_keywords_error">Por favor, introduce algún término de búsqueda</string>
+    <string name="navigation_drawer_watchlist">Mi watchlist de series</string>
+    <string name="navigation_drawer_watching_series">Mis series en curso</string>
+    <string name="navigation_drawer_watched_series">Mis series vistas</string>
+
+    <!-- Search results screen -->
+    <string name="title_activity_search_results">Series</string>
+    <string name="title_search_results">Resultados de la búsqueda</string>
+
+    <!-- Show details screen -->
+    <string name="title_activity_show_detail">Detalles de la serie</string>
+    <string name="overview_label">Sinopsis:</string>
+    <string name="votes_label">votos</string>
+
+    <!-- Settings screen -->
+    <string name="title_activity_settings">Ajustes</string>
+    <string name="pref_sort_order_label">Ordenar colecciones de series por</string>
+    <string name="pref_sort_order_title_label">Título</string>
+    <string name="pref_sort_order_rating_label">Mejor puntuadas</string>
+
+    <!-- About screen -->
+    <string name="title_activity_about">WTA. Acerca de</string>
+    <string name="action_about">Acerca de</string>
+    <string name="about_text">
+        WatchThemAll es una aplicación de seguimiento de series de TV. Hoy en día hay muchas
+        opciones en lo relativo a las series de televisión, y a veces puede resultar difícil
+        decidir qué series ver y estar seguro de no perderse ningún episodio de nuestras series
+        favoritas.\n\n
+        Esta aplicación pretende facilitar todo eso, al mismo tiempo que hace del hobby de ver y
+        seguir series de televisión algo mucho más divertido.\n\n
+        WTA está dirigida a los amantes de las series, especialmente aquellos que quieran estar al
+        tanto acerca de sus series favoritas, permanecer siempre al día y descubrir nuevas series
+        que ver.\n\n
+        Todos los datos de las series se obtienen de la API de trakt.tv (https://trakt.tv/).\n\n
+        Para reportar bugs o sugerencias, por favor, envíe un mail a david.duque.f@gmail.com\n\n
+    </string>
+
+    <!-- Other strings -->
+    <string name="share_show_base_message">¡Hola! Mira esta película. ¡Tiene buena pinta!</string>
+</resources>

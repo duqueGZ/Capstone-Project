@@ -39,17 +39,15 @@ public class WtaSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
         try {
+            Log.d(LOG_TAG, "WtaSyncAdapter started");
+
             TraktService traktService = Utility.getTraktService();
 
             Utility.synchronizeGenresData(getContext(), LOG_TAG, traktService);
-            Vector<Integer> shows = Utility.synchronizePopularShowsData(getContext(), LOG_TAG, traktService);
-            for (Integer showId : shows) {
-                Utility.synchronizeShowComments(getContext(), LOG_TAG, traktService, showId);
-                Utility.synchronizeShowPeople(getContext(), LOG_TAG, traktService, showId);
-                Utility.synchronizeShowSeasons(getContext(), LOG_TAG, traktService, showId);
-            }
 
-            Log.d(LOG_TAG, "Trakt sync correctly ended");
+            Utility.synchronizePopularShowsData(getContext(), LOG_TAG, traktService);
+
+            Log.d(LOG_TAG, "WtaSyncAdapter correctly ended");
         } catch (Exception e) {
             Log.e(LOG_TAG, "Error: " + e.getMessage(), e);
         }

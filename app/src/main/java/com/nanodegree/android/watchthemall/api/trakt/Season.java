@@ -70,10 +70,10 @@ public class Season {
     public String toString() {
         return "Season{" +
                 "number=" + number +
-                ", ids=" + ids.toString() +
+                ", ids=" + ((ids==null)?null:ids.toString()) +
                 ", episode_count=" + episode_count +
                 ", aired_episodes=" + aired_episodes +
-                ", first_aired=" + new SimpleDateFormat(Utility.MONTH_DAY_YEAR_COMPLETE_HOUR_PATTERN).format(first_aired) +
+                ", first_aired=" + ((first_aired==null)?null:new SimpleDateFormat(Utility.MONTH_DAY_YEAR_COMPLETE_HOUR_PATTERN).format(first_aired)) +
                 '}';
     }
 }

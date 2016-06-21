@@ -89,9 +89,9 @@ public class Episode {
                 "number=" + number +
                 ", title='" + title + '\'' +
                 ", overview='" + overview + '\'' +
-                ", images=" + images.toString() +
-                ", ids=" + ids.toString() +
-                ", first_aired=" + new SimpleDateFormat(Utility.MONTH_DAY_YEAR_COMPLETE_HOUR_PATTERN).format(first_aired) +
+                ", images=" + ((images==null)?null:images.toString()) +
+                ", ids=" + ((ids==null)?null:ids.toString()) +
+                ", first_aired=" + ((first_aired==null)?null:new SimpleDateFormat(Utility.MONTH_DAY_YEAR_COMPLETE_HOUR_PATTERN).format(first_aired)) +
                 ", rating=" + rating +
                 ", votes=" + votes +
                 '}';

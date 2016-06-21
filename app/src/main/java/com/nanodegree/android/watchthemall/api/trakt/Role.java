@@ -28,7 +28,7 @@ public class Role {
     public String toString() {
         return "Role{" +
                 "character='" + character + '\'' +
-                ", person=" + person.toString() +
+                ", person=" + ((person==null)?null:person.toString()) +
                 '}';
     }
 }

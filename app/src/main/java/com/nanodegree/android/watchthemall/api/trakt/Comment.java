@@ -78,12 +78,12 @@ public class Comment {
     public String toString() {
         return "Comment{" +
                 "id=" + id +
-                ", created_at=" + new SimpleDateFormat(Utility.MONTH_DAY_YEAR_COMPLETE_HOUR_PATTERN).format(created_at) +
+                ", created_at=" + ((created_at==null)?null:new SimpleDateFormat(Utility.MONTH_DAY_YEAR_COMPLETE_HOUR_PATTERN).format(created_at)) +
                 ", comment='" + comment + '\'' +
                 ", spoiler=" + spoiler +
                 ", review=" + review +
                 ", likes=" + likes +
-                ", user=" + user.toString() +
+                ", user=" + ((user==null)?null:user.toString()) +
                 '}';
     }
 }

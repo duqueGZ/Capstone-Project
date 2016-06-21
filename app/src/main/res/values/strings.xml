@@ -1,7 +1,59 @@
 <resources>
     <!-- General -->
     <string name="app_name" translatable="false">WatchThemAll</string>
+    <string name="wta_motto" translatable="false">Track your series!</string>
+    <string name="content_authority" translatable="false">com.nanodegree.android.watchthemall</string>
+
+    <!-- Menus strings -->
+    <string name="action_settings">Settings</string>
+    <string name="action_share">Share</string>
+    <string name="action_about">About</string>
+
+    <!-- Main activity (search screen) -->
+    <string name="search_hint">Introduce your search here...</string>
+    <string name="empty_search_keywords_error">Please, introduce some keywords to your search</string>
+    <string name="navigation_drawer_watchlist">My series watchlist</string>
+    <string name="navigation_drawer_watching_series">My watching series</string>
+    <string name="navigation_drawer_watched_series">My watched series</string>
+
+    <!-- Search results screen -->
+    <string name="title_activity_search_results">Shows</string>
+    <string name="title_search_results">Search results</string>
+
+    <!-- Show details screen -->
+    <string name="title_activity_show_detail">Show Details</string>
+    <string name="overview_label">Overview:</string>
+    <string name="votes_label">votes</string>
+
+    <!-- Settings screen -->
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_sort_order_label">Sort show collections by</string>
+    <string name="pref_sort_order_key" translatable="false">show_collections_sort_order</string>
+    <string name="pref_sort_order_title_label">Title</string>
+    <string name="pref_sort_order_rating_label">Highest rated</string>
+    <string name="pref_sort_order_title" translatable="false">title.asc</string>
+    <string name="pref_sort_order_rating" translatable="false">rating.desc</string>
+
+    <!-- About screen -->
+    <string name="title_activity_about">WTA. About</string>
+    <string name="about_text">
+        WatchThemAll is a series tracker app. Nowadays there are quite a lot of options regarding
+        TV series, and sometimes it may be difficult to decide which series to watch and to be sure
+        of not forgetting any episode of our favorite shows.\n\n
+        This application aims to make all of that more easy to the user, at the same time that
+        makes the hobby of watching and following TV series something much more enjoyable
+        and funny.\n\n
+        WTA is intended to TV series lovers, specially to those people who want to keep track
+        of their favorite shows, to stay always updated and to know about new series to watch.\n\n
+        All shows data is acquired from trakt.tv (https://trakt.tv/) API.\n\n
+        To report any bugs or suggestions do not hesitate to send a mail to
+        david.duque.f@gmail.com
+    </string>
 
     <!-- SyncAdapter related -->
     <string name="sync_account_type" translatable="false">watchthemall.android.nanodegree</string>
+
+    <!-- Other strings -->
+    <string name="share_show_base_message">Hi! Check this show. It looks great!! </string>
+    <string name="share_show_hashtag" translatable="false">#WatchThemAll</string>
 </resources>

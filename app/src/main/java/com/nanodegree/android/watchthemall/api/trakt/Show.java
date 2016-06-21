@@ -170,10 +170,10 @@ public class Show {
         return "Show{" +
                 "title='" + title + '\'' +
                 ", year=" + year +
-                ", ids=" + ids.toString() +
+                ", ids=" + ((ids==null)?null:ids.toString()) +
                 ", overview='" + overview + '\'' +
-                ", first_aired=" + new SimpleDateFormat(Utility.MONTH_DAY_YEAR_COMPLETE_HOUR_PATTERN).format(first_aired) +
-                ", airs=" + airs.toString() +
+                ", first_aired=" + ((first_aired==null)?null:new SimpleDateFormat(Utility.MONTH_DAY_YEAR_COMPLETE_HOUR_PATTERN).format(first_aired)) +
+                ", airs=" + ((airs==null)?null:airs.toString()) +
                 ", runtime=" + runtime +
                 ", network='" + network + '\'' +
                 ", country='" + country + '\'' +
@@ -184,7 +184,7 @@ public class Show {
                 ", language='" + language + '\'' +
                 ", genres=" + genres +
                 ", aired_episodes=" + aired_episodes +
-                ", images=" + images.toString() +
+                ", images=" + ((images==null)?null:images.toString()) +
                 '}';
     }
 }

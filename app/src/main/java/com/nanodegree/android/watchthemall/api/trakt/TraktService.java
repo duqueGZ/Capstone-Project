@@ -32,14 +32,21 @@ public interface TraktService {
             "Content-type: application/json",
             "trakt-api-version: 2"
     })
-    @GET("search?" + SHOW_TYPE_QUERY_PARAMETER + "&" + FULL_IMAGES_EXTENDED_INFO_QUERY_PARAMETER + "&" + WTA_CUSTOM_PAGINATION_PARAMETERS)
-    Call<List<Show>> searchShowsByKeywords(@Query("query") String keywords, @Query("year") Integer year);
+    @GET("search?" + SHOW_TYPE_QUERY_PARAMETER + "&" + "&" + WTA_CUSTOM_PAGINATION_PARAMETERS)
+    Call<List<SearchResult>> searchShowsByKeywords(@Query("query") String keywords, @Query("year") Integer year);
 
     @Headers({
             "Content-type: application/json",
             "trakt-api-version: 2"
     })
-    @GET("shows/popular?" + FULL_IMAGES_EXTENDED_INFO_QUERY_PARAMETER + "&" + WTA_CUSTOM_PAGINATION_PARAMETERS)
+    @GET("shows/{id}?" + FULL_IMAGES_EXTENDED_INFO_QUERY_PARAMETER)
+    Call<Show> showSummary(@Path("id") int showId);
+
+    @Headers({
+            "Content-type: application/json",
+            "trakt-api-version: 2"
+    })
+    @GET("shows/popular?" + IMAGES_EXTENDED_INFO_QUERY_PARAMETER + "&" + WTA_CUSTOM_PAGINATION_PARAMETERS)
     Call<List<Show>> popularShows();
 
     @Headers({
@@ -54,7 +61,7 @@ public interface TraktService {
             "trakt-api-version: 2"
     })
     @GET("shows/{id}/people?" + IMAGES_EXTENDED_INFO_QUERY_PARAMETER)
-    Call<List<Role>> showPeople(@Path("id") int showId);
+    Call<Cast> showPeople(@Path("id") int showId);
 
     @Headers({
             "Content-type: application/json",

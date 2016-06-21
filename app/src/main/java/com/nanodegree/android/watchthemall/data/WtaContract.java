@@ -14,6 +14,7 @@ public class WtaContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final String PATH_SHOWS = "shows";
+    public static final String PATH_LAST_SEARCHED_SHOWS = "lastsearch";
     public static final String PATH_SHOW_GENRES = "showgenres";
     public static final String PATH_SHOW_PEOPLE = "showpeople";
     public static final String PATH_SEASONS = "seasons";
@@ -61,6 +62,8 @@ public class WtaContract {
         public static final String COLUMN_WATCHED = "watched";
         public static final String COLUMN_WATCHLIST = "watchlist";
         public static final String COLUMN_WTA_UPDATE_DATE = "update_date";
+        public static final String COLUMN_LAST_SEARCH_RESULT = "last_search_result";
+        public static final String COLUMN_SEARCH_SCORE = "search_score";
 
         public static final String GENRE_RELATION_TABLE_NAME = "showgenre";
 
