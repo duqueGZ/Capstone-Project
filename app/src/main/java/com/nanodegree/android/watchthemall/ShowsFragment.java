@@ -179,6 +179,10 @@ public class ShowsFragment extends Fragment
             if (position== ListView.INVALID_POSITION) {
                 position = 0;
             }
+            if (mUseTwoPaneLayout) {
+                CustomRunnable customRunnable = new CustomRunnable(position);
+                mShowPostersGridView.postDelayed(customRunnable, 0);
+            }
             mShowPostersGridView.smoothScrollToPosition(position);
         } else {
             //Shows data cannot be retrieved from DB
