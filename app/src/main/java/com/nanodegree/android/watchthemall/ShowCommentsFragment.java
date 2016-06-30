@@ -15,13 +15,14 @@ import android.widget.TextView;
 import com.nanodegree.android.watchthemall.adapters.CommentsAdapter;
 import com.nanodegree.android.watchthemall.components.NonScrollListView;
 import com.nanodegree.android.watchthemall.data.WtaContract;
+import com.nanodegree.android.watchthemall.util.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class ShowCommentsFragment extends Fragment
-        implements WtaTabFragment, LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = ShowCommentsFragment.class.getSimpleName();
 
@@ -60,13 +61,12 @@ public class ShowCommentsFragment extends Fragment
                              Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mUri = arguments.getParcelable(ShowDetailFragment.DETAIL_URI);
+            mUri = arguments.getParcelable(Utility.DETAIL_URI_EXTRA_KEY);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_tab_comments, container, false);
         mButterKnifeUnbinder = ButterKnife.bind(this, rootView);
 
-//        mRootView.setVisibility(View.INVISIBLE);
         getLoaderManager().initLoader(DETAIL_SHOW_COMMENTS_LOADER_ID, null, this);
 
         mCommentsAdapter = new CommentsAdapter(getActivity(), null, 0);
@@ -82,11 +82,6 @@ public class ShowCommentsFragment extends Fragment
         if (mButterKnifeUnbinder!=null) {
             mButterKnifeUnbinder.unbind();
         }
-    }
-
-    @Override
-    public void hideDetailLayout() {
-//        mRootView.setVisibility(View.INVISIBLE);
     }
 
     @Override

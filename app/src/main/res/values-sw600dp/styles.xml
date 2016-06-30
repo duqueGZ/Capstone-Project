@@ -1,4 +1,8 @@
 <resources>
+
+    <style name="AppTheme.TwoPane" parent="AppTheme">
+    </style>
+
     <style name="CustomGridView" parent="CustomMatchParentView">
         <item name="android:columnWidth">150dp</item>
         <item name="android:numColumns">auto_fit</item>

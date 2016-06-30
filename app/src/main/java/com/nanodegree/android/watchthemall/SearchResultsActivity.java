@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.nanodegree.android.watchthemall.util.Utility;
 
 public class SearchResultsActivity extends AppCompatActivity
-        implements ShowsFragment.Callback {
+        implements ShowsFragment.ShowCallback, ShowSeasonsFragment.EpisodeCallback {
 
     private static final String DETAIL_FRAGMENT_TAG = "DFTAG";
 
@@ -22,34 +22,46 @@ public class SearchResultsActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_search_results);
 
-        getSupportActionBar().setTitle(getString(R.string.title_activity_search_results) + ". " +
-                getString(R.string.title_search_results));
-
         if (getIntent().getExtras()!=null) {
             mSearchKeywords = getIntent().getExtras().getString(Utility.SEARCH_KEYWORDS_EXTRA_KEY);
             mSelectedCollection = getIntent().getExtras().getString(Utility.COLLECTION_EXTRA_KEY);
         }
 
-        if (findViewById(R.id.show_detail_container) != null) {
+        if (findViewById(R.id.detail_container) != null) {
             // The detail container view will be present only in the large-screen layouts
             // (res/layout-sw600dp). If this view is present, then the activity should be
             // in two-pane mode.
-            mTwoPane = true;
+            mTwoPane = Boolean.TRUE;
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
             if (savedInstanceState == null) {
                 ShowDetailFragment detailFragment = new ShowDetailFragment();
                 Bundle arguments = new Bundle();
-                arguments.putBoolean(ShowDetailFragment.IS_TWO_PANE, mTwoPane);
                 detailFragment.setArguments(arguments);
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.show_detail_container, detailFragment,
+                        .replace(R.id.detail_container, detailFragment,
                                 DETAIL_FRAGMENT_TAG)
                         .commit();
             }
         } else {
-            mTwoPane = false;
+            mTwoPane = Boolean.FALSE;
+        }
+
+        if (getSupportActionBar()!=null) {
+            String title = getString(R.string.title_activity_search_results) + ". ";
+            if ((mSelectedCollection!=null)&&(!mSelectedCollection.isEmpty())) {
+                if (mSelectedCollection.equals(getString(R.string.navigation_drawer_watching_series))) {
+                    title = title + getString(R.string.title_watching_series);
+                } else if (mSelectedCollection.equals(getString(R.string.navigation_drawer_watched_series))) {
+                    title = title + getString(R.string.title_watched_series);
+                } else if (mSelectedCollection.equals(getString(R.string.navigation_drawer_watchlist_series))) {
+                    title = title + getString(R.string.title_watchlist_series);
+                }
+            } else {
+                title = title + getString(R.string.title_search_results);
+            }
+            getSupportActionBar().setTitle(title);
         }
 
         ShowsFragment showsFragment = ((ShowsFragment) getSupportFragmentManager()
@@ -60,27 +72,54 @@ public class SearchResultsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemSelected(Uri dateUri) {
+    public void onShowSelected(Uri uri) {
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
-            if (dateUri==null) {
-                ShowDetailFragment detailFragment =
-                        ((ShowDetailFragment) getSupportFragmentManager()
-                                .findFragmentById(R.id.show_detail_container));
+            if (uri==null) {
+                WtaDetailFragment detailFragment =
+                        ((WtaDetailFragment) getSupportFragmentManager()
+                                .findFragmentById(R.id.detail_container));
                 detailFragment.hideDetailLayout();
             }
             Bundle args = new Bundle();
-            args.putParcelable(ShowDetailFragment.DETAIL_URI, dateUri);
+            args.putParcelable(Utility.DETAIL_URI_EXTRA_KEY, uri);
             ShowDetailFragment fragment = new ShowDetailFragment();
             fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.show_detail_container, fragment, DETAIL_FRAGMENT_TAG)
+                    .replace(R.id.detail_container, fragment, DETAIL_FRAGMENT_TAG)
                     .commit();
         } else {
             Intent intent = new Intent(this, ShowDetailActivity.class)
-                    .setData(dateUri);
+                    .setData(uri);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onEpisodeSelected(Uri uri) {
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            if (uri==null) {
+                WtaDetailFragment detailFragment =
+                        ((WtaDetailFragment) getSupportFragmentManager()
+                                .findFragmentById(R.id.detail_container));
+                detailFragment.hideDetailLayout();
+            }
+            Bundle args = new Bundle();
+            args.putParcelable(Utility.DETAIL_URI_EXTRA_KEY, uri);
+            EpisodeDetailFragment fragment = new EpisodeDetailFragment();
+            fragment.setArguments(args);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detail_container, fragment, DETAIL_FRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent =
+                    new Intent(this, EpisodeDetailActivity.class)
+                            .setData(uri);
             startActivity(intent);
         }
     }

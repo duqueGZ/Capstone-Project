@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/CustomMatchParentView"
-    android:id="@+id/episode_detail_container"
+    android:id="@+id/detail_container"
+    android:fitsSystemWindows="true"
     tools:context="com.nanodegree.android.watchthemall.ShowDetailActivity"
     tools:ignore="MergeRootFrame" />

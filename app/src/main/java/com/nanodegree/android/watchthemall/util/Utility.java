@@ -81,6 +81,7 @@ public class Utility {
     //Activity and Fragments stuff
     public static final String SEARCH_KEYWORDS_EXTRA_KEY = "SEARCH_KEYWORDS";
     public static final String COLLECTION_EXTRA_KEY = "COLLECTION";
+    public static final String DETAIL_URI_EXTRA_KEY = "URI";
 
     public static void updateShowsSearch(Context context, String searchText) {
         Utility.updateShowsSearch(context, searchText, null, null, null);

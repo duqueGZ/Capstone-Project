@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -14,6 +15,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +26,14 @@ import com.github.clans.fab.FloatingActionButton;
 import com.nanodegree.android.watchthemall.adapters.ViewPagerAdapter;
 import com.nanodegree.android.watchthemall.data.WtaContract;
 import com.nanodegree.android.watchthemall.data.WtaProvider;
+import com.nanodegree.android.watchthemall.util.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class ShowDetailFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements WtaDetailFragment, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = ShowDetailFragment.class.getSimpleName();
 
@@ -52,10 +55,6 @@ public class ShowDetailFragment extends Fragment
     public static final int COL_WATCHED = 4;
     public static final int COL_WATCHLIST = 5;
 
-    public static final String DETAIL_URI = "URI";
-    public static final String IS_TWO_PANE = "IS_TWO_PANE";
-
-    private boolean mUseTwoPaneLayout;
     private Uri mUri;
     private String mShowId;
     private String mShowTitle = "";
@@ -82,19 +81,10 @@ public class ShowDetailFragment extends Fragment
     FloatingActionButton mFabWatched;
     @BindView(R.id.show_detail_menu_watchlist_item)
     FloatingActionButton mFabWatchlist;
+    @BindView(R.id.show_detail_root)
+    CoordinatorLayout mRoot;
 
     public ShowDetailFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            mUseTwoPaneLayout = arguments
-                    .getBoolean(ShowDetailFragment.IS_TWO_PANE, Boolean.FALSE);
-        }
     }
 
     @Override
@@ -103,8 +93,11 @@ public class ShowDetailFragment extends Fragment
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mUri = arguments.getParcelable(ShowDetailFragment.DETAIL_URI);
-            mShowId = WtaContract.ShowEntry.getShowIdFromUri(mUri);
+            mUri = arguments.getParcelable(Utility.DETAIL_URI_EXTRA_KEY);
+            mShowId = null;
+            if (mUri!=null) {
+                mShowId = WtaContract.ShowEntry.getShowIdFromUri(mUri);
+            }
         }
 
         View rootView = inflater.inflate(R.layout.fragment_show_detail, container, false);
@@ -127,12 +120,12 @@ public class ShowDetailFragment extends Fragment
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    if (mCollapsingToolbarLayout!=null) {
+                    if (mCollapsingToolbarLayout != null) {
                         mCollapsingToolbarLayout.setTitle(mShowTitle);
                     }
                     isShow = true;
-                } else if(isShow) {
-                    if (mCollapsingToolbarLayout!=null) {
+                } else if (isShow) {
+                    if (mCollapsingToolbarLayout != null) {
                         mCollapsingToolbarLayout.setTitle("");
                     }
                     isShow = false;
@@ -150,6 +143,8 @@ public class ShowDetailFragment extends Fragment
         mFabWatchlist
                 .setOnClickListener(new WtaShowFabOnClickListener(WtaContract.ShowEntry.COLUMN_WATCHLIST));
 
+        mRoot.setVisibility(View.INVISIBLE);
+
         return rootView;
     }
 
@@ -163,20 +158,14 @@ public class ShowDetailFragment extends Fragment
     }
 
     public void hideDetailLayout() {
-        if ((mViewPager!=null) && (mViewPager.getAdapter() != null)) {
-            int tabCount = mViewPager.getAdapter().getCount();
-            for (int i=0; i<tabCount; i++) {
-                ((WtaTabFragment)((ViewPagerAdapter)mViewPager.getAdapter()).getItem(i))
-                        .hideDetailLayout();
-            }
-        }
+        mRoot.setVisibility(View.INVISIBLE);
     }
 
     private void setupViewPager() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
         Bundle arguments = new Bundle();
-        arguments.putParcelable(ShowDetailFragment.DETAIL_URI, mUri);
+        arguments.putParcelable(Utility.DETAIL_URI_EXTRA_KEY, mUri);
         Fragment tabFragment;
         tabFragment = new ShowInfoFragment();
         tabFragment.setArguments(arguments);
@@ -249,6 +238,8 @@ public class ShowDetailFragment extends Fragment
         setWatchedFabStatus(watched == 1);
         int watchlist = data.getInt(COL_WATCHLIST);
         setWatchlistFabStatus(watchlist == 1);
+
+        mRoot.setVisibility(View.VISIBLE);
     }
 
     private class WtaShowFabOnClickListener implements View.OnClickListener {

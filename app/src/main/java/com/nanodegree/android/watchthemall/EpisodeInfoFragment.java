@@ -12,12 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.nanodegree.android.watchthemall.adapters.PeopleAdapter;
-import com.nanodegree.android.watchthemall.components.NonScrollListView;
 import com.nanodegree.android.watchthemall.data.WtaContract;
 import com.nanodegree.android.watchthemall.util.Utility;
 
@@ -30,7 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class EpisodeInfoFragment extends Fragment
-        implements WtaTabFragment, LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = EpisodeInfoFragment.class.getSimpleName();
     private static final int DETAIL_EPISODE_LOADER_ID = 7;
@@ -71,7 +67,7 @@ public class EpisodeInfoFragment extends Fragment
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mUri = arguments.getParcelable(EpisodeDetailFragment.DETAIL_URI);
+            mUri = arguments.getParcelable(Utility.DETAIL_URI_EXTRA_KEY);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_episode_info, container, false);
@@ -89,11 +85,6 @@ public class EpisodeInfoFragment extends Fragment
         if (mButterKnifeUnbinder!=null) {
             mButterKnifeUnbinder.unbind();
         }
-    }
-
-    @Override
-    public void hideDetailLayout() {
-        // TODO: Review this
     }
 
     @Override

@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class ShowInfoFragment extends Fragment
-        implements WtaTabFragment, LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = ShowInfoFragment.class.getSimpleName();
     private static final int DETAIL_SHOW_LOADER_ID = 1;
@@ -122,7 +122,7 @@ public class ShowInfoFragment extends Fragment
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mUri = arguments.getParcelable(ShowDetailFragment.DETAIL_URI);
+            mUri = arguments.getParcelable(Utility.DETAIL_URI_EXTRA_KEY);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_show_info, container, false);
@@ -145,11 +145,6 @@ public class ShowInfoFragment extends Fragment
         if (mButterKnifeUnbinder!=null) {
             mButterKnifeUnbinder.unbind();
         }
-    }
-
-    @Override
-    public void hideDetailLayout() {
-        // TODO: Review this
     }
 
     @Override

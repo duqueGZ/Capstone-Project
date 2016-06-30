@@ -5,7 +5,7 @@
     <!-- Main activity (search screen) -->
     <string name="search_hint">Introduce tu búsqueda aquí...</string>
     <string name="empty_search_keywords_error">Por favor, introduce algún término de búsqueda</string>
-    <string name="navigation_drawer_watchlist">Mi watchlist de series</string>
+    <string name="navigation_drawer_watchlist_series">Mi watchlist de series</string>
     <string name="navigation_drawer_watching_series">Mis series en curso</string>
     <string name="navigation_drawer_watched_series">Mis series vistas</string>
     <string name="unknown_date">Fecha desconocida</string>
@@ -14,6 +14,9 @@
     <!-- Search results screen -->
     <string name="title_activity_search_results">Series</string>
     <string name="title_search_results">Resultados de la búsqueda</string>
+    <string name="title_watchlist_series">Watchlist</string>
+    <string name="title_watching_series">Viendo</string>
+    <string name="title_watched_series">Vistas</string>
 
     <!-- Show details screen -->
     <string name="title_activity_show_detail">Detalles de la serie</string>

@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             if ((position!=ListView.INVALID_POSITION)&&(position<mNavigationDrawerOptions.length)) {
                 String selectedOption = mNavigationDrawerOptions[position];
                 // navigation_drawer_watchlist
-                if ((selectedOption.equals(getString(R.string.navigation_drawer_watchlist))) ||
+                if ((selectedOption.equals(getString(R.string.navigation_drawer_watchlist_series))) ||
                         (selectedOption.equals(getString(R.string.navigation_drawer_watching_series))) ||
                         (selectedOption.equals(getString(R.string.navigation_drawer_watched_series)))) {
                     Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);

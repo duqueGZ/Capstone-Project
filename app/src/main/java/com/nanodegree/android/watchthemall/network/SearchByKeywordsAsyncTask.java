@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.nanodegree.android.watchthemall.R;
 import com.nanodegree.android.watchthemall.SearchResultsActivity;
+import com.nanodegree.android.watchthemall.ShowsFragment;
 import com.nanodegree.android.watchthemall.api.trakt.TraktService;
 import com.nanodegree.android.watchthemall.data.WtaContract;
 import com.nanodegree.android.watchthemall.util.Utility;
@@ -73,6 +75,10 @@ public class SearchByKeywordsAsyncTask extends AsyncTask<Object, Void, List<Inte
 
             SynchronizeShowsDetailsAsyncTask detailsTask = new SynchronizeShowsDetailsAsyncTask(mContext);
             detailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, result);
+        } else if (mContext instanceof SearchResultsActivity) {
+            ShowsFragment showsFragment = (ShowsFragment)((SearchResultsActivity)mContext).getSupportFragmentManager()
+                    .findFragmentById(R.id.shows_container);
+            showsFragment.updateSwipeRefreshLayout(Boolean.FALSE);
         }
     }
 }

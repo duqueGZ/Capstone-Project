@@ -2,7 +2,7 @@
 <resources>
     <!-- Main screen navigation drawer options -->
     <string-array name="main_navigation_drawer_options">
-        <item>@string/navigation_drawer_watchlist</item>
+        <item>@string/navigation_drawer_watchlist_series</item>
         <item>@string/navigation_drawer_watching_series</item>
         <item>@string/navigation_drawer_watched_series</item>
         <item>@string/action_settings</item>

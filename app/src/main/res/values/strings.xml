@@ -7,7 +7,7 @@
     <string name="unknown_runtime">Unknown air runtime</string>
 
     <!-- Menus strings -->
-    <string name="navigation_drawer_watchlist">My series watchlist</string>
+    <string name="navigation_drawer_watchlist_series">My series watchlist</string>
     <string name="navigation_drawer_watching_series">My watching series</string>
     <string name="navigation_drawer_watched_series">My watched series</string>
     <string name="action_settings">Settings</string>
@@ -20,6 +20,9 @@
     <!-- Search results screen -->
     <string name="title_activity_search_results">Shows</string>
     <string name="title_search_results">Search results</string>
+    <string name="title_watchlist_series">Watchlist</string>
+    <string name="title_watching_series">Watching</string>
+    <string name="title_watched_series">Watched</string>
 
     <!-- Show details screen -->
     <string name="title_activity_show_detail">Show Details</string>

@@ -1,6 +1,5 @@
 package com.nanodegree.android.watchthemall;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +14,14 @@ import android.widget.ExpandableListView;
 
 import com.nanodegree.android.watchthemall.adapters.SeasonsAdapter;
 import com.nanodegree.android.watchthemall.data.WtaContract;
+import com.nanodegree.android.watchthemall.util.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class ShowSeasonsFragment extends Fragment
-        implements WtaTabFragment, LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = ShowSeasonsFragment.class.getSimpleName();
 
@@ -58,13 +57,11 @@ public class ShowSeasonsFragment extends Fragment
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mUri = arguments.getParcelable(ShowDetailFragment.DETAIL_URI);
+            mUri = arguments.getParcelable(Utility.DETAIL_URI_EXTRA_KEY);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_show_seasons, container, false);
         mButterKnifeUnbinder = ButterKnife.bind(this, rootView);
-
-//        mRootView.setVisibility(View.INVISIBLE);
 
         getLoaderManager().initLoader(DETAIL_SHOW_SEASONS_LOADER_ID, null, this);
 
@@ -78,10 +75,8 @@ public class ShowSeasonsFragment extends Fragment
                     Uri uri = WtaContract.EpisodeEntry
                             .buildEpisodeUri(cursor.getInt(SeasonsAdapter.COL_EPISODE_ID));
 
-                    Intent intent =
-                            new Intent(ShowSeasonsFragment.this.getActivity(), EpisodeDetailActivity.class)
-                                    .setData(uri);
-                    startActivity(intent);
+                    ((EpisodeCallback) getActivity())
+                            .onEpisodeSelected(uri);
 
                     return Boolean.TRUE;
                 }
@@ -99,11 +94,6 @@ public class ShowSeasonsFragment extends Fragment
         if (mButterKnifeUnbinder!=null) {
             mButterKnifeUnbinder.unbind();
         }
-    }
-
-    @Override
-    public void hideDetailLayout() {
-//        mRootView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -145,6 +135,16 @@ public class ShowSeasonsFragment extends Fragment
 
     private void onDetailShowSeasonsLoadFinished(Cursor data) {
         mSeasonsAdapter.changeCursor(data);
+    }
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface EpisodeCallback {
+
+        void onEpisodeSelected(Uri uri);
     }
 
 }

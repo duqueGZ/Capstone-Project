@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/CustomMatchParentView"
+    android:id="@+id/episode_detail_root"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -58,7 +59,8 @@
                 app:tabBackground="@color/colorPrimaryDark"
                 app:tabTextColor="@color/colorPrimaryLight"
                 app:tabMode="fixed"
-                app:tabGravity="fill"/>
+                app:tabGravity="fill"
+                app:tabMaxWidth="0dp" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

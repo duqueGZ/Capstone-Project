@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/CustomMatchParentView"
+    android:id="@+id/show_detail_root"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -47,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="top"
+                android:fitsSystemWindows="true"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -55,10 +57,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="bottom"
+                android:fitsSystemWindows="true"
                 app:tabBackground="@color/colorPrimaryDark"
                 app:tabTextColor="@color/colorPrimaryLight"
                 app:tabMode="fixed"
-                app:tabGravity="fill"/>
+                app:tabGravity="fill"
+                app:tabMaxWidth="0dp" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -67,6 +71,7 @@
     <android.support.v4.view.ViewPager
         style="@style/CustomMatchParentView"
         android:id="@+id/show_detail_viewpager"
+        android:fitsSystemWindows="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.github.clans.fab.FloatingActionMenu

@@ -1,6 +1,6 @@
 package com.nanodegree.android.watchthemall;
 
-public interface WtaTabFragment {
+public interface WtaDetailFragment {
 
     void hideDetailLayout();
 }

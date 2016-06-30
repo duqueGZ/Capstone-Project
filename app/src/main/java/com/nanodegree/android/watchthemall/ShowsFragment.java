@@ -93,8 +93,8 @@ public class ShowsFragment extends Fragment
                         uri = WtaContract.ShowEntry
                                 .buildShowUri(cursor.getInt(COL_ID));
                     }
-                    ((Callback) getActivity())
-                            .onItemSelected(uri);
+                    ((ShowCallback) getActivity())
+                            .onShowSelected(uri);
                 }
                 mSelectedPosition = i;
             }
@@ -117,7 +117,7 @@ public class ShowsFragment extends Fragment
 
     @Override
     public void onRefresh() {
-        Utility.updateShowsSearch(getActivity().getApplicationContext(), mSearchKeywords, this, new int[]{SHOW_LOADER_ID}, this);
+        Utility.updateShowsSearch(getActivity(), mSearchKeywords, this, new int[]{SHOW_LOADER_ID}, this);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class ShowsFragment extends Fragment
                 selection = WtaProvider.sWatchingShowSelection;
             } else if (mSelectedCollection.equals(getString(R.string.navigation_drawer_watched_series))) {
                 selection = WtaProvider.sWatchedShowSelection;
-            } else if (mSelectedCollection.equals(getString(R.string.navigation_drawer_watchlist))) {
+            } else if (mSelectedCollection.equals(getString(R.string.navigation_drawer_watchlist_series))) {
                 selection = WtaProvider.sWatchlistShowSelection;
             }
         }
@@ -205,9 +205,9 @@ public class ShowsFragment extends Fragment
      * implement. This mechanism allows activities to be notified of item
      * selections.
      */
-    public interface Callback {
+    public interface ShowCallback {
 
-        void onItemSelected(Uri dateUri);
+        void onShowSelected(Uri uri);
     }
 
     private class CustomRunnable implements Runnable {
