@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application themes -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -9,14 +9,24 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
-    <style name="AppTheme.NoActionBar" parent="AppTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="AppTheme.ActionBar" parent="AppTheme">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
+
+    <style name="CustomWrapContentView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="CustomMatchParentView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
     </style>
 
     <style name="CustomRootLayout" parent="CustomMatchParentView">
-        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
-        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingStart">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingEnd">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingTop">@dimen/activity_vertical_margin</item>
         <item name="android:paddingBottom">@dimen/activity_vertical_margin</item>
     </style>
@@ -40,36 +50,19 @@
         <item name="android:scaleType">centerInside</item>
     </style>
 
-    <style name="CustomWrapContentView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="CustomMatchParentView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="CustomImageButton" parent="CustomWrapContentView">
-        <item name="android:background">@null</item>
-        <item name="android:gravity">center_vertical</item>
-    </style>
-
-    <style name="CustomDetailImageView" parent="CustomWrapContentView">
-        <item name="android:scaleType">fitStart</item>
-        <item name="android:adjustViewBounds">true</item>
-    </style>
-
-    <style name="CustomRatingTextView" parent="CustomWrapContentView">
-        <item name="android:textSize">34sp</item>
-    </style>
-
     <style name="CustomMediumTextView" parent="CustomWrapContentView">
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/wtaGray</item>
     </style>
 
     <style name="CustomSmallTextView" parent="CustomWrapContentView">
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textColor">@color/wtaGray</item>
+    </style>
+
+    <style name="CustomLargeTextView" parent="CustomWrapContentView">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
 
     <style name="CustomMediumItalicTextView" parent="CustomMediumTextView">
@@ -78,12 +71,15 @@
 
     <style name="CustomMediumBoldTextView" parent="CustomMediumTextView">
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="CustomLargeBoldTextView" parent="CustomWrapContentView">
-        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    <style name="CustomSmallItalicTextView" parent="CustomSmallTextView">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="CustomLargeBoldTextView" parent="CustomLargeTextView">
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
 </resources>

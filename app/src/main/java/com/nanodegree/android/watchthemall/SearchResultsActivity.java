@@ -14,6 +14,7 @@ public class SearchResultsActivity extends AppCompatActivity
 
     private boolean mTwoPane;
     private String mSearchKeywords = "";
+    private String mSelectedCollection = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class SearchResultsActivity extends AppCompatActivity
 
         if (getIntent().getExtras()!=null) {
             mSearchKeywords = getIntent().getExtras().getString(Utility.SEARCH_KEYWORDS_EXTRA_KEY);
+            mSelectedCollection = getIntent().getExtras().getString(Utility.COLLECTION_EXTRA_KEY);
         }
 
         if (findViewById(R.id.show_detail_container) != null) {
@@ -48,15 +50,13 @@ public class SearchResultsActivity extends AppCompatActivity
             }
         } else {
             mTwoPane = false;
-//            if (getSupportActionBar()!=null) {
-//                getSupportActionBar().setElevation(0f);
-//            }
         }
 
         ShowsFragment showsFragment = ((ShowsFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.shows_container));
         showsFragment.setUseTwoPaneLayout(mTwoPane);
         showsFragment.setSearchKeywords(mSearchKeywords);
+        showsFragment.setSelectedCollection(mSelectedCollection);
     }
 
     @Override

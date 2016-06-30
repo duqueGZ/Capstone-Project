@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 import com.nanodegree.android.watchthemall.adapters.ShowAdapter;
 import com.nanodegree.android.watchthemall.data.WtaContract;
+import com.nanodegree.android.watchthemall.data.WtaProvider;
 import com.nanodegree.android.watchthemall.util.Utility;
 
 import butterknife.BindView;
@@ -41,6 +42,7 @@ public class ShowsFragment extends Fragment
     private ShowAdapter mShowAdapter;
     private boolean mUseTwoPaneLayout;
     private String mSearchKeywords;
+    private String mSelectedCollection;
     private int mSelectedPosition;
     private Unbinder mButterKnifeUnbinder;
 
@@ -115,7 +117,7 @@ public class ShowsFragment extends Fragment
 
     @Override
     public void onRefresh() {
-        Utility.updateShowsSearch(getActivity(), mSearchKeywords, this, new int[]{SHOW_LOADER_ID}, this);
+        Utility.updateShowsSearch(getActivity().getApplicationContext(), mSearchKeywords, this, new int[]{SHOW_LOADER_ID}, this);
     }
 
     @Override
@@ -135,20 +137,44 @@ public class ShowsFragment extends Fragment
         mSearchKeywords = keywords;
     }
 
+    public void setSelectedCollection(String selectedCollection) {
+        mSelectedCollection = selectedCollection;
+        getLoaderManager().restartLoader(SHOW_LOADER_ID, null, this);
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Uri showsUri = WtaContract.ShowEntry.CONTENT_URI.buildUpon()
-                .appendPath(WtaContract.PATH_LAST_SEARCHED_SHOWS).build();
+        Uri showsUri = WtaContract.ShowEntry.CONTENT_URI;
+        String selection = WtaProvider.sLastSearchedShowSelection;
+        String[] selectionArgs = new String[]{"1"};
+        String sortOrder = WtaContract.ShowEntry.COLUMN_SEARCH_SCORE + " DESC";
+        if ((mSelectedCollection!=null)&&(!mSelectedCollection.isEmpty())) {
+            String currentQueryPreference = Utility.getCurrentQueryPreference(getActivity());
+            if (currentQueryPreference.equals(getString(R.string.pref_sort_order_rating))) {
+                sortOrder = WtaContract.ShowEntry.COLUMN_RATING + " DESC";
+            } else {
+                // Title sort order is the default user preference
+                sortOrder = WtaContract.ShowEntry.COLUMN_TITLE;
+            }
+            if (mSelectedCollection.equals(getString(R.string.navigation_drawer_watching_series))) {
+                selection = WtaProvider.sWatchingShowSelection;
+            } else if (mSelectedCollection.equals(getString(R.string.navigation_drawer_watched_series))) {
+                selection = WtaProvider.sWatchedShowSelection;
+            } else if (mSelectedCollection.equals(getString(R.string.navigation_drawer_watchlist))) {
+                selection = WtaProvider.sWatchlistShowSelection;
+            }
+        }
 
-        return new CursorLoader(getActivity(), showsUri, SHOW_COLUMNS, null, null, null);
+        return new CursorLoader(getActivity(), showsUri, SHOW_COLUMNS,
+                selection, selectionArgs, sortOrder);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mShowAdapter.swapCursor(data);
         if (data.getCount()>0) {
-            ShowsFragment.this.mShowPostersGridView.setVisibility(View.VISIBLE);
-            ShowsFragment.this.mNoDataRetrieved.setVisibility(View.INVISIBLE);
+            mShowPostersGridView.setVisibility(View.VISIBLE);
+            mNoDataRetrieved.setVisibility(View.INVISIBLE);
             int position = mSelectedPosition;
             if (position== ListView.INVALID_POSITION) {
                 position = 0;
@@ -156,8 +182,8 @@ public class ShowsFragment extends Fragment
             mShowPostersGridView.smoothScrollToPosition(position);
         } else {
             //Shows data cannot be retrieved from DB
-            ShowsFragment.this.mShowPostersGridView.setVisibility(View.INVISIBLE);
-            ShowsFragment.this.mNoDataRetrieved.setVisibility(View.VISIBLE);
+            mShowPostersGridView.setVisibility(View.INVISIBLE);
+            mNoDataRetrieved.setVisibility(View.VISIBLE);
             if (mUseTwoPaneLayout) {
                 CustomRunnable customRunnable = new CustomRunnable(0);
                 mShowPostersGridView.postDelayed(customRunnable, 0);

@@ -19,7 +19,8 @@ public interface TraktService {
     String IMAGES_EXTENDED_INFO_QUERY_PARAMETER = "extended=images";
     String FULL_IMAGES_EPISODES_EXTENDED_INFO_QUERY_PARAMETER = "extended=full,images,episodes";
     String SHOW_TYPE_QUERY_PARAMETER = "type=show";
-    String WTA_CUSTOM_PAGINATION_PARAMETERS = "page=1&limit=" + Utility.MAX_SHOWS;
+    String WTA_CUSTOM_SHOWS_PAGINATION_PARAMETERS = "page=1&limit=" + Utility.MAX_SHOWS;
+    String WTA_CUSTOM_COMMENTS_PAGINATION_PARAMETERS = "page=1&limit=" + Utility.MAX_COMMENTS;
 
     @Headers({
             "Content-type: application/json",
@@ -32,7 +33,7 @@ public interface TraktService {
             "Content-type: application/json",
             "trakt-api-version: 2"
     })
-    @GET("search?" + SHOW_TYPE_QUERY_PARAMETER + "&" + "&" + WTA_CUSTOM_PAGINATION_PARAMETERS)
+    @GET("search?" + SHOW_TYPE_QUERY_PARAMETER + "&" + WTA_CUSTOM_SHOWS_PAGINATION_PARAMETERS)
     Call<List<SearchResult>> searchShowsByKeywords(@Query("query") String keywords, @Query("year") Integer year);
 
     @Headers({
@@ -46,14 +47,14 @@ public interface TraktService {
             "Content-type: application/json",
             "trakt-api-version: 2"
     })
-    @GET("shows/popular?" + IMAGES_EXTENDED_INFO_QUERY_PARAMETER + "&" + WTA_CUSTOM_PAGINATION_PARAMETERS)
+    @GET("shows/popular?" + FULL_IMAGES_EXTENDED_INFO_QUERY_PARAMETER + "&" + WTA_CUSTOM_SHOWS_PAGINATION_PARAMETERS)
     Call<List<Show>> popularShows();
 
     @Headers({
             "Content-type: application/json",
             "trakt-api-version: 2"
     })
-    @GET("shows/{id}/comments")
+    @GET("shows/{id}/comments?" + WTA_CUSTOM_COMMENTS_PAGINATION_PARAMETERS)
     Call<List<Comment>> showComments(@Path("id") int showId);
 
     @Headers({
@@ -74,6 +75,6 @@ public interface TraktService {
             "Content-type: application/json",
             "trakt-api-version: 2"
     })
-    @GET("shows/{id}/seasons/{season}/episodes/{episode}/comments")
+    @GET("shows/{id}/seasons/{season}/episodes/{episode}/comments?" + WTA_CUSTOM_COMMENTS_PAGINATION_PARAMETERS)
     Call<List<Comment>> episodeComments(@Path("id") int showId, @Path("season") int season, @Path("episode") int episode);
 }

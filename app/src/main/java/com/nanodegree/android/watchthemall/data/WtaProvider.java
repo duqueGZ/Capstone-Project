@@ -19,12 +19,24 @@ public class WtaProvider extends ContentProvider {
     //"show._id = ?" selection String
     public static final String sShowSelection = WtaContract.ShowEntry.TABLE_NAME + "." +
             WtaContract.ShowEntry._ID + " = ? ";
+    //"show.watching = ?" selection String
+    public static final String sWatchingShowSelection = WtaContract.ShowEntry.TABLE_NAME + "." +
+            WtaContract.ShowEntry.COLUMN_WATCHING + " = ? ";
+    //"show.watched = ?" selection String
+    public static final String sWatchedShowSelection = WtaContract.ShowEntry.TABLE_NAME + "." +
+            WtaContract.ShowEntry.COLUMN_WATCHED + " = ? ";
+    //"show.watchlist = ?" selection String
+    public static final String sWatchlistShowSelection = WtaContract.ShowEntry.TABLE_NAME + "." +
+            WtaContract.ShowEntry.COLUMN_WATCHLIST + " = ? ";
     //"show.last_search_result = ?" selection String
     public static final String sLastSearchedShowSelection = WtaContract.ShowEntry.TABLE_NAME + "." +
             WtaContract.ShowEntry.COLUMN_LAST_SEARCH_RESULT + " = ? ";
-    //"show.update_date < ?" selection String
+    //"show.update_date < ?" selection String (always show.watching=0 && show.watched=0 && show.watchlist=0
     public static final String sShowsByUpdateDateSelection = WtaContract.ShowEntry.TABLE_NAME + "." +
-            WtaContract.ShowEntry.COLUMN_WTA_UPDATE_DATE + " < ?";
+            WtaContract.ShowEntry.COLUMN_WTA_UPDATE_DATE + " < ? AND " +
+            WtaContract.ShowEntry.TABLE_NAME + "." + WtaContract.ShowEntry.COLUMN_WATCHING + " = 0 AND " +
+            WtaContract.ShowEntry.TABLE_NAME + "." + WtaContract.ShowEntry.COLUMN_WATCHED + " = 0 AND " +
+            WtaContract.ShowEntry.TABLE_NAME + "." + WtaContract.ShowEntry.COLUMN_WATCHLIST + " = 0 ";
     //"season._id = ?" selection String
     public static final String sSeasonSelection = WtaContract.SeasonEntry.TABLE_NAME + "." +
             WtaContract.SeasonEntry._ID + " = ? ";
@@ -37,9 +49,6 @@ public class WtaProvider extends ContentProvider {
     //"genre._id = ?" selection String
     public static final String sGenreSelection = WtaContract.GenreEntry.TABLE_NAME + "." +
             WtaContract.GenreEntry._ID + " = ? ";
-    //"genre._id in (?)" selection String
-    public static final String sGenresByIdListNotInSelection = WtaContract.GenreEntry.TABLE_NAME +
-            "." + WtaContract.GenreEntry._ID + " NOT IN (?)";
     //"person._id = ?" selection String
     public static final String sPersonSelection = WtaContract.PersonEntry.TABLE_NAME + "." +
             WtaContract.PersonEntry._ID + " = ? ";
@@ -83,7 +92,6 @@ public class WtaProvider extends ContentProvider {
     private static final SQLiteQueryBuilder sShowPersonQueryBuilder;
     private static final int SHOWS = 100;
     private static final int SHOW_WITH_ID = 101;
-    private static final int LAST_SEARCHED_SHOWS = 102;
     private static final int SEASONS = 200;
     private static final int SEASON_WITH_ID = 201;
     private static final int SHOW_SEASONS_WITH_ID = 202;
@@ -120,7 +128,7 @@ public class WtaProvider extends ContentProvider {
         sGenreQueryBuilder.setTables(WtaContract.GenreEntry.TABLE_NAME);
         sShowGenreQueryBuilder = new SQLiteQueryBuilder();
         sShowGenreQueryBuilder.setTables(
-                WtaContract.ShowEntry.GENRE_RELATION_TABLE_NAME + " INNER JOIN " +
+                WtaContract.ShowEntry.GENRE_RELATION_TABLE_NAME + " LEFT JOIN " +
                         WtaContract.GenreEntry.TABLE_NAME + " ON " +
                         WtaContract.ShowEntry.GENRE_RELATION_TABLE_NAME + "." +
                         WtaContract.ShowEntry.COLUMN_GENRE_ID + " = " +
@@ -151,8 +159,6 @@ public class WtaProvider extends ContentProvider {
                 return WtaContract.ShowEntry.CONTENT_TYPE;
             case SHOW_WITH_ID:
                 return WtaContract.ShowEntry.CONTENT_ITEM_TYPE;
-            case LAST_SEARCHED_SHOWS:
-                return WtaContract.ShowEntry.CONTENT_TYPE;
             case SEASONS:
                 return WtaContract.SeasonEntry.CONTENT_TYPE;
             case SHOW_SEASONS_WITH_ID:
@@ -195,11 +201,6 @@ public class WtaProvider extends ContentProvider {
                         String sortOrder) {
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
-            // "shows/lastsearch"
-            case LAST_SEARCHED_SHOWS: {
-                retCursor = getLastSearchedShows(projection, sLastSearchedShowSelection, new String[] {"1"}, WtaContract.ShowEntry.COLUMN_SEARCH_SCORE + " DESC");
-                break;
-            }
             // "shows/*"
             case SHOW_WITH_ID:
             {
@@ -274,8 +275,8 @@ public class WtaProvider extends ContentProvider {
                 retCursor = getGenreById(uri, projection, sortOrder);
                 break;
             }
-            // "shows/genres/*"
-            case SHOW_GENRES_WITH_ID:
+            // "showgenres/*"
+            case SHOW_GENRE_RELATION_WITH_ID:
             {
                 retCursor = getGenresByShowId(uri, projection, sortOrder);
                 break;
@@ -291,8 +292,8 @@ public class WtaProvider extends ContentProvider {
                 retCursor = getPersonById(uri, projection, sortOrder);
                 break;
             }
-            // "shows/people/*"
-            case SHOW_PEOPLE_WITH_ID:
+            // "showpeople/*"
+            case SHOW_PERSON_RELATION_WITH_ID:
             {
                 retCursor = getPeopleByShowId(uri, projection, sortOrder);
                 break;
@@ -490,8 +491,7 @@ public class WtaProvider extends ContentProvider {
         final SQLiteDatabase db = mDbHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         switch (match) {
-            case SHOWS:
-            case LAST_SEARCHED_SHOWS: {
+            case SHOWS: {
                 db.beginTransaction();
                 int returnCount = 0;
                 try {
@@ -726,19 +726,6 @@ public class WtaProvider extends ContentProvider {
         );
     }
 
-    private Cursor getLastSearchedShows(String[] projection, String selection, String[] selectionArgs,
-                            String sortOrder) {
-        return sShowQueryBuilder.query(mDbHelper.getReadableDatabase(),
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                sortOrder,
-                Utility.MAX_SHOWS
-        );
-    }
-
     private Cursor getSeasonById(Uri uri, String[] projection, String sortOrder) {
         String seasonId = WtaContract.SeasonEntry.getSeasonIdFromUri(uri);
         return sSeasonQueryBuilder.query(mDbHelper.getReadableDatabase(),
@@ -819,7 +806,8 @@ public class WtaProvider extends ContentProvider {
                 new String[]{episodeId},
                 null,
                 null,
-                sortOrder
+                sortOrder,
+                Utility.MAX_COMMENTS
         );
     }
 
@@ -831,7 +819,8 @@ public class WtaProvider extends ContentProvider {
                 new String[]{showId},
                 null,
                 null,
-                sortOrder
+                sortOrder,
+                Utility.MAX_COMMENTS
         );
     }
 
@@ -915,7 +904,8 @@ public class WtaProvider extends ContentProvider {
                 new String[]{showId},
                 null,
                 null,
-                sortOrder
+                sortOrder,
+                Utility.MAX_CAST_ENTRIES
         );
     }
 
@@ -937,7 +927,6 @@ public class WtaProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, WtaContract.PATH_SHOWS, SHOWS);
-        matcher.addURI(authority, WtaContract.PATH_SHOWS + "/" + WtaContract.PATH_LAST_SEARCHED_SHOWS, LAST_SEARCHED_SHOWS);
         matcher.addURI(authority, WtaContract.PATH_SHOWS + "/" + WtaContract.PATH_COMMENTS + "/#",
                 SHOW_COMMENTS_WITH_ID);
         matcher.addURI(authority, WtaContract.PATH_SHOWS + "/" + WtaContract.PATH_SEASONS + "/#",

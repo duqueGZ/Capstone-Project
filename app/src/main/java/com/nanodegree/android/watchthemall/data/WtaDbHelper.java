@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class WtaDbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 13;
     private static final String DATABASE_NAME = "watch.them.all.db";
 
     public WtaDbHelper(Context context) {
@@ -25,6 +25,7 @@ public class WtaDbHelper extends SQLiteOpenHelper {
                 WtaContract.ShowEntry.COLUMN_TITLE + " TEXT, " +
                 WtaContract.ShowEntry.COLUMN_OVERVIEW + " TEXT, " +
                 WtaContract.ShowEntry.COLUMN_POSTER_PATH + " TEXT, " +
+                WtaContract.ShowEntry.COLUMN_BANNER_PATH + " TEXT, " +
                 WtaContract.ShowEntry.COLUMN_STATUS + " TEXT, " +
                 WtaContract.ShowEntry.COLUMN_YEAR + " INTEGER, " +
                 WtaContract.ShowEntry.COLUMN_FIRST_AIRED + " INTEGER, " +
@@ -37,11 +38,11 @@ public class WtaDbHelper extends SQLiteOpenHelper {
                 WtaContract.ShowEntry.COLUMN_VOTE_COUNT + " INTEGER, " +
                 WtaContract.ShowEntry.COLUMN_LANGUAGE + " TEXT, " +
                 WtaContract.ShowEntry.COLUMN_AIRED_EPISODES + " INTEGER, " +
-                WtaContract.ShowEntry.COLUMN_WATCHING + " INTEGER, " +
-                WtaContract.ShowEntry.COLUMN_WATCHED + " INTEGER, " +
-                WtaContract.ShowEntry.COLUMN_WATCHLIST + " INTEGER, " +
+                WtaContract.ShowEntry.COLUMN_WATCHING + " INTEGER DEFAULT 0, " +
+                WtaContract.ShowEntry.COLUMN_WATCHED + " INTEGER DEFAULT 0, " +
+                WtaContract.ShowEntry.COLUMN_WATCHLIST + " INTEGER DEFAULT 0, " +
                 WtaContract.ShowEntry.COLUMN_WTA_UPDATE_DATE + " INTEGER, " +
-                WtaContract.ShowEntry.COLUMN_LAST_SEARCH_RESULT + " INTEGER, " +
+                WtaContract.ShowEntry.COLUMN_LAST_SEARCH_RESULT + " INTEGER DEFAULT 0, " +
                 WtaContract.ShowEntry.COLUMN_SEARCH_SCORE + " REAL " +
                 ");";
 
@@ -95,8 +96,10 @@ public class WtaDbHelper extends SQLiteOpenHelper {
                 WtaContract.EpisodeEntry.COLUMN_FIRST_AIRED + " INTEGER, " +
                 WtaContract.EpisodeEntry.COLUMN_RATING + " REAL, " +
                 WtaContract.EpisodeEntry.COLUMN_VOTE_COUNT + " INTEGER, " +
+                WtaContract.EpisodeEntry.COLUMN_SEASON_NUMBER + " INTEGER NOT NULL, " +
                 WtaContract.EpisodeEntry.COLUMN_SEASON_ID + " INTEGER NOT NULL, " +
-                WtaContract.EpisodeEntry.COLUMN_WATCHLIST + " INTEGER, " +
+                WtaContract.EpisodeEntry.COLUMN_WATCHED + " INTEGER DEFAULT 0, " +
+                WtaContract.EpisodeEntry.COLUMN_WATCHLIST + " INTEGER DEFAULT 0, " +
                 " FOREIGN KEY (" + WtaContract.EpisodeEntry.COLUMN_SEASON_ID + ") REFERENCES " +
                 WtaContract.SeasonEntry.TABLE_NAME + " (" + WtaContract.SeasonEntry._ID + ") " +
                 " ON UPDATE CASCADE ON DELETE CASCADE);";

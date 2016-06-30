@@ -81,10 +81,16 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             if ((position!=ListView.INVALID_POSITION)&&(position<mNavigationDrawerOptions.length)) {
                 String selectedOption = mNavigationDrawerOptions[position];
-                if (selectedOption.equals(getString(R.string.action_settings))) {
+                // navigation_drawer_watchlist
+                if ((selectedOption.equals(getString(R.string.navigation_drawer_watchlist))) ||
+                        (selectedOption.equals(getString(R.string.navigation_drawer_watching_series))) ||
+                        (selectedOption.equals(getString(R.string.navigation_drawer_watched_series)))) {
+                    Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
+                    intent.putExtra(Utility.COLLECTION_EXTRA_KEY, selectedOption);
+                    startActivity(intent);
+                }  else if (selectedOption.equals(getString(R.string.action_settings))) {
                     startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                }
-                if (selectedOption.equals(getString(R.string.action_about))) {
+                } else if (selectedOption.equals(getString(R.string.action_about))) {
                     startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 }
             }

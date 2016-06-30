@@ -11,16 +11,14 @@ import com.nanodegree.android.watchthemall.api.trakt.TraktService;
 import com.nanodegree.android.watchthemall.data.WtaContract;
 import com.nanodegree.android.watchthemall.util.Utility;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * An Async Task in order to retrieve Trakt shows data according to provided keywords search results
  */
-public class SearchByKeywordsAsyncTask extends AsyncTask<Object, Void, String> {
+public class SearchByKeywordsAsyncTask extends AsyncTask<Object, Void, List<Integer>> {
 
     private final String LOG_TAG = SearchByKeywordsAsyncTask.class.getSimpleName();
-
-    private static final String OK_RESULT = "OK";
 
     private Context mContext;
     private Boolean mNewActivity;
@@ -31,11 +29,11 @@ public class SearchByKeywordsAsyncTask extends AsyncTask<Object, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Object... params) {
+    protected List<Integer> doInBackground(Object... params) {
 
         Log.d(LOG_TAG, "AsyncTask started");
 
-        String result = SearchByKeywordsAsyncTask.OK_RESULT;
+        List<Integer> result = null;
         mNewActivity = (Boolean) params[0];
         mSearchText = (String) params[1];
         Integer year = null;
@@ -56,23 +54,25 @@ public class SearchByKeywordsAsyncTask extends AsyncTask<Object, Void, String> {
             mContext.getContentResolver().update(WtaContract.ShowEntry.CONTENT_URI, updateValues,
                     null, null);
 
-            Utility.synchronizeShowsByKeywordsData(mContext, LOG_TAG, traktService, mSearchText, year);
+            result = Utility.synchronizeShowsByKeywordsData(mContext, LOG_TAG, traktService, mSearchText, year);
 
             Log.d(LOG_TAG, "AsyncTask correctly ended");
         } catch (Exception e) {
             Log.e(LOG_TAG, "Error: " + e.getMessage(), e);
-            result = e.getMessage();
         }
 
         return result;
     }
 
     @Override
-    protected void onPostExecute(String result) {
+    protected void onPostExecute(List<Integer> result) {
         if (mNewActivity) {
             Intent intent = new Intent(mContext, SearchResultsActivity.class);
             intent.putExtra(Utility.SEARCH_KEYWORDS_EXTRA_KEY, mSearchText);
             mContext.startActivity(intent);
+
+            SynchronizeShowsDetailsAsyncTask detailsTask = new SynchronizeShowsDetailsAsyncTask(mContext);
+            detailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, result);
         }
     }
 }

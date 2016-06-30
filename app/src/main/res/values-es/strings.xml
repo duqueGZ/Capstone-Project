@@ -1,7 +1,6 @@
 <resources>
     <!-- Menus strings -->
     <string name="action_settings">Ajustes</string>
-    <string name="action_share">Compartir</string>
 
     <!-- Main activity (search screen) -->
     <string name="search_hint">Introduce tu búsqueda aquí...</string>
@@ -9,6 +8,8 @@
     <string name="navigation_drawer_watchlist">Mi watchlist de series</string>
     <string name="navigation_drawer_watching_series">Mis series en curso</string>
     <string name="navigation_drawer_watched_series">Mis series vistas</string>
+    <string name="unknown_date">Fecha desconocida</string>
+    <string name="unknown_runtime">Duración desconocida</string>
 
     <!-- Search results screen -->
     <string name="title_activity_search_results">Series</string>
@@ -17,8 +18,23 @@
     <!-- Show details screen -->
     <string name="title_activity_show_detail">Detalles de la serie</string>
     <string name="overview_label">Sinopsis:</string>
+    <string name="first_aired_label">Fecha de estreno:</string>
+    <string name="broadcast_label">Emisión:</string>
+    <string name="genres_label">Géneros:</string>
+    <string name="cast_label">Reparto:</string>
     <string name="votes_label">votos</string>
+    <string name="show_info_tab">INFO</string>
+    <string name="show_seasons_tab">TEMPORADAS</string>
+    <string name="show_comments_tab">COMENTARIOS</string>
+    <string name="episodes">episodios</string>
+    <string name="various_characters">Varios</string>
+    <string name="empty_comment_list">No se ha podido recuperar ningún comentario</string>
+    <string name="empty_genre_list">Ningún género recuperado</string>
 
+    <!-- Episode details screen -->
+    <string name="title_activity_episode_detail">Detalles del episodio</string>
+    <string name="episode_info_tab">INFO</string>
+    <string name="episode_comments_tab">COMENTARIOS</string>
     <!-- Settings screen -->
     <string name="title_activity_settings">Ajustes</string>
     <string name="pref_sort_order_label">Ordenar colecciones de series por</string>
@@ -42,6 +58,22 @@
         Para reportar bugs o sugerencias, por favor, envíe un mail a david.duque.f@gmail.com\n\n
     </string>
 
+    <!-- Content descriptions -->
+    <string name="show_poster">Cartel de la serie</string>
+    <string name="wta_logo">Logo de la aplicación</string>
+    <string name="search">Buscar</string>
+    <string name="no_show_data">Sin datos de series disponibles</string>
+    <string name="show_banner">Banner de la serie</string>
+    <string name="show_actions">Acciones sobre la serie</string>
+    <string name="watching_item">Viendo</string>
+    <string name="watched_item">Visto</string>
+    <string name="watchlist_item">Watchlist</string>
+    <string name="episode_status">Estado del episodio</string>
+    <string name="episode_actions">Acciones sobre el episodio</string>
+    <string name="episode_screenshot">Fotograma del capítulo</string>
+
     <!-- Other strings -->
-    <string name="share_show_base_message">¡Hola! Mira esta película. ¡Tiene buena pinta!</string>
+    <string name="sdf_format">dd-MM-yyyy</string>
+    <string name="sdf_with_hour_format">dd-MM-yyyy HH:mm:ss</string>
+
 </resources>

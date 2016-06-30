@@ -2,13 +2,16 @@ package com.nanodegree.android.watchthemall.util;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.nanodegree.android.watchthemall.BuildConfig;
+import com.nanodegree.android.watchthemall.R;
 import com.nanodegree.android.watchthemall.api.trakt.AirInfo;
 import com.nanodegree.android.watchthemall.api.trakt.Cast;
 import com.nanodegree.android.watchthemall.api.trakt.Comment;
@@ -47,6 +50,10 @@ public class Utility {
 
     //WatchThemAll always shows a maximum of MAX_SHOWS in search results screen
     public static final String MAX_SHOWS = "20";
+    //WatchThemAll always shows a maximum of MAX_COMMENTS in show and episode comments tabs
+    public static final String MAX_COMMENTS = "10";
+    //WatchThemAll always shows a maximum of MAX_CAST_ENTRIES in show details info tab
+    public static final String MAX_CAST_ENTRIES = "15";
 
     //MM/DD/YYYY HH24:MI:SS DateFormat pattern
     public static final String MONTH_DAY_YEAR_COMPLETE_HOUR_PATTERN = "MM/DD/YYYY HH24:MI:SS";
@@ -55,23 +62,32 @@ public class Utility {
     private static final String TRAKT_API_KEY_HEADER = "trakt-api-key";
     private static final String TRAKT_API_BASE_URL = "https://api-v2launch.trakt.tv";
     private static final String UNKNOWN_USER = "Unknown user";
+    private static final String UNKNOWN_AIR_INFO = "No air info available";
     private static final String UNKNOWN_AIR_DAY = "Unknown air day";
+    private static final String UNKNOWN_AIR_TIME = "Unknown air time";
+    private static final String UNKNOWN_AIR_TIMEZONE = "Unknown air timezone";
+    private static final String UNKNOWN_TITLE = "Unknown title";
+    private static final String UNKNOWN_OVERVIEW = "No overview available";
+    private static final String UNKNOWN_NETWORK = "Unknown air network";
+    private static final String UNKNOWN_LANGUAGE = "Unknown language";
+    private static final String UNKNOWN_STATUS = "Unknown current show status";
 
     //WebView parameters
     public static final String HTML_TEXT_FORMAT =
-            "<html><body style=\"text-align:justify\"> %s </body></Html>";
+            "<html><body style=\"text-align:justify; color:#7E888D;\"> %s </body></Html>";
     public static final String HTML_TEXT_MIME_TYPE = "text/html; charset=utf-8";
     public static final String HTML_TEXT_ENCODING = "UTF-8";
 
     //Activity and Fragments stuff
     public static final String SEARCH_KEYWORDS_EXTRA_KEY = "SEARCH_KEYWORDS";
+    public static final String COLLECTION_EXTRA_KEY = "COLLECTION";
 
     public static void updateShowsSearch(Context context, String searchText) {
         Utility.updateShowsSearch(context, searchText, null, null, null);
     }
 
-    public static void updateShowsSearch(Context context, String searchText, Fragment fragment, int[] loaderIds,
-                                        LoaderManager.LoaderCallbacks callbacks) {
+    public static void updateShowsSearch(Context context, String searchText, Fragment fragment,
+                                         int[] loaderIds, LoaderManager.LoaderCallbacks callbacks) {
         Boolean newActivity = Boolean.TRUE;
         if (fragment!=null) {
             // When calling from ShowsFragment in SearchResultsActivity, we don't need to transient
@@ -85,7 +101,7 @@ public class Utility {
         }
         if ((searchText!=null) && (!searchText.isEmpty())) {
             SearchByKeywordsAsyncTask searchTask = new SearchByKeywordsAsyncTask(context);
-            searchTask.execute(newActivity, searchText);
+            searchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, newActivity, searchText);
         }
     }
 
@@ -112,29 +128,26 @@ public class Utility {
         Response<List<Genre>> genresResponse = showGenres.execute();
         if (genresResponse.isSuccessful()) {
             List<Genre> receivedGenres = genresResponse.body();
-            Vector<String> receivedIds = new Vector<>(receivedGenres.size());
             Vector<ContentValues> genresValues = new Vector<>(receivedGenres.size());
             for (Genre genre: receivedGenres) {
                 ContentValues values = new ContentValues();
                 values.put(WtaContract.GenreEntry._ID, genre.getSlug());
                 values.put(WtaContract.GenreEntry.COLUMN_NAME, genre.getName());
 
-                receivedIds.add(genre.getSlug());
                 genresValues.add(values);
             }
 
             // Add to DB
             if (genresValues.size() > 0) {
+                // Remove from DB old values (as only the new ones are valid from now)
+                context.getContentResolver()
+                        .delete(WtaContract.GenreEntry.CONTENT_URI, null, null);
+
                 ContentValues[] insertValues = new ContentValues[genresValues.size()];
                 genresValues.toArray(insertValues);
                 context.getContentResolver()
                         .bulkInsert(WtaContract.GenreEntry.CONTENT_URI, insertValues);
             }
-
-            // Remove from DB those values not retrieved now (as they are no valid anymore)
-            context.getContentResolver()
-                    .delete(WtaContract.GenreEntry.CONTENT_URI, WtaProvider.sGenresByIdListNotInSelection,
-                            new String[] {TextUtils.join(",", receivedIds)});
 
             Log.d(logTag, "Genres synchronization correctly ended");
         } else {
@@ -142,44 +155,55 @@ public class Utility {
         }
     }
 
-    public static void synchronizeShowsByKeywordsData(Context context, String logTag, TraktService traktService, String keywords, Integer year) throws IOException {
+    public static List<Integer> synchronizeShowsByKeywordsData(Context context, String logTag, TraktService traktService, String keywords, Integer year) throws IOException {
         Call<List<SearchResult>> searchShows = traktService.searchShowsByKeywords(keywords, year);
         Response<List<SearchResult>> searchResponse = searchShows.execute();
+        List<Integer> receivedIds = new Vector<>();
         if (searchResponse.isSuccessful()) {
             List<SearchResult> searchResults = searchResponse.body();
+            receivedIds = new Vector<>(searchResults.size());
             Vector<ContentValues> showsValues = new Vector<>(searchResults.size());
             Vector<ContentValues> showGenreValues = new Vector<>();
             Integer showId;
             for (SearchResult result: searchResults) {
                 showId = result.getShow().getIds().getTrakt();
+                receivedIds.add(showId);
                 processShowSummaryData(logTag, traktService, showsValues, showGenreValues, showId, result.getScore());
             }
 
             updateShowsDbInfo(context, showsValues, showGenreValues,
-                    WtaContract.ShowEntry.CONTENT_URI.buildUpon().appendPath(WtaContract.PATH_LAST_SEARCHED_SHOWS).build());
+                    WtaContract.ShowEntry.CONTENT_URI);
 
             Log.d(logTag, "Searched shows synchronization correctly ended");
         } else {
             Log.e(logTag, "Error occurred calling searchShowsByKeywords API endpoint: " + searchResponse.message());
         }
+
+        return receivedIds;
     }
 
-    public static void synchronizePopularShowsData(Context context, String logTag, TraktService traktService) throws IOException {
+    public static List<Integer> synchronizePopularShowsData(Context context, String logTag, TraktService traktService) throws IOException {
         Call<List<Show>> popularShows = traktService.popularShows();
         Response<List<Show>> showsResponse = popularShows.execute();
+        List<Integer> receivedIds = new Vector<>();
         if (showsResponse.isSuccessful()) {
             List<Show> receivedShows = showsResponse.body();
+            receivedIds = new Vector<>(receivedShows.size());
             Vector<ContentValues> showsValues = new Vector<>(receivedShows.size());
             Vector<ContentValues> showGenreValues = new Vector<>();
             for (Show show: receivedShows) {
+                receivedIds.add(show.getIds().getTrakt());
                 Utility.processReceivedShow(show, showsValues, showGenreValues, null);
             }
+
             Utility.updateShowsDbInfo(context, showsValues, showGenreValues, WtaContract.ShowEntry.CONTENT_URI);
 
             Log.d(logTag, "Popular shows synchronization correctly ended");
         } else {
             Log.e(logTag, "Error occurred calling popularShows API endpoint: " + showsResponse.message());
         }
+
+        return receivedIds;
     }
 
     public static void synchronizeShowComments(Context context, String logTag, TraktService traktService, Integer showId) throws IOException {
@@ -211,9 +235,14 @@ public class Utility {
             Cast receivedCast = peopleResponse.body();
             List<Role> receivedPeople = receivedCast.getCast();
             if (receivedPeople!=null) {
-                Vector<ContentValues> peopleValues = new Vector<>(receivedPeople.size());
-                Vector<ContentValues> showPeopleValues = new Vector<>(receivedPeople.size());
+                int synchronizeDataSize = Math.min(receivedPeople.size(), Integer.valueOf(Utility.MAX_CAST_ENTRIES));
+                Vector<ContentValues> peopleValues = new Vector<>(synchronizeDataSize);
+                Vector<ContentValues> showPeopleValues = new Vector<>(synchronizeDataSize);
+                int count = 0;
                 for (Role role : receivedPeople) {
+                    if (count==Integer.valueOf(Utility.MAX_CAST_ENTRIES)) {
+                        break;
+                    }
                     ContentValues values = new ContentValues();
                     values.put(WtaContract.PersonEntry._ID, role.getPerson().getIds().getTrakt());
                     values.put(WtaContract.PersonEntry.COLUMN_NAME, role.getPerson().getName());
@@ -226,6 +255,7 @@ public class Utility {
 
                     peopleValues.add(values);
                     showPeopleValues.add(relation);
+                    count++;
                 }
 
                 // Add to DB
@@ -270,7 +300,7 @@ public class Utility {
 
                 seasonsValues.add(values);
 
-                episodes = Utility.processSeasonEpisodes(logTag, season.getIds().getTrakt(), season.getEpisodes(), episodesValues);
+                episodes = Utility.processSeasonEpisodes(season.getIds().getTrakt(), season.getNumber(), season.getEpisodes(), episodesValues);
                 for (Integer episodeNumber : episodes) {
                     Utility.processEpisodeComments(logTag, traktService, showId, season.getNumber(), episodeNumber, commentsValues);
                 }
@@ -306,6 +336,64 @@ public class Utility {
         }
     }
 
+    public static String getCurrentQueryPreference(Context context) {
+        //Get show_collections_sort_order preference value. By default, use sort by title option
+        SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        return preferences.getString(context.getString(R.string.pref_sort_order_key),
+                context.getString(R.string.pref_sort_order_title));
+    }
+
+    public static String capitalizeAndFormatDelimiters(String str) {
+        return capitalizeAndFormatDelimiters(str, null);
+    }
+
+    public static String capitalizeAndFormatDelimiters(String str, char[] delimiters) {
+        return capitalizeAndFormatDelimiters(str, delimiters, null);
+    }
+
+    public static String capitalizeAndFormatDelimiters(String str, char[] delimiters, char[] fixedDelimiters) {
+        int delimLen = (delimiters == null ? -1 : delimiters.length);
+        if (str == null || str.length() == 0 || delimLen == 0) {
+            return str;
+        }
+        str = str.toLowerCase();
+        int strLen = str.length();
+        StringBuffer buffer = new StringBuffer(strLen);
+        boolean capitalizeNext = true;
+        for (int i = 0; i < strLen; i++) {
+            char ch = str.charAt(i);
+            if (isDelimiter(ch, delimiters)) {
+                if (isDelimiter(ch, fixedDelimiters)) {
+                    buffer.append(ch);
+                } else {
+                    buffer.append(' ');
+                }
+                capitalizeNext = true;
+            } else if (capitalizeNext) {
+                buffer.append(Character.toTitleCase(ch));
+                capitalizeNext = false;
+            } else {
+                buffer.append(ch);
+            }
+        }
+
+        return buffer.toString();
+    }
+
+    private static boolean isDelimiter(char ch, char[] delimiters) {
+        if (delimiters == null) {
+            return Character.isWhitespace(ch);
+        }
+        for (char delimiter : delimiters) {
+            if (ch == delimiter) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static void processShowSummaryData(String logTag, TraktService traktService, Vector<ContentValues> showsValues,
                                                Vector<ContentValues> showGenreValues, Integer showId, Double score) throws IOException {
 
@@ -320,28 +408,26 @@ public class Utility {
     }
 
     private static void processReceivedShow(Show receivedShow, Vector<ContentValues> showsValues,
-                                     Vector<ContentValues> showGenreValues, Double score) {
+                                            Vector<ContentValues> showGenreValues, Double score) throws IOException {
         Date now = new Date();
         ContentValues values = new ContentValues();
         values.put(WtaContract.ShowEntry._ID, receivedShow.getIds().getTrakt());
-        values.put(WtaContract.ShowEntry.COLUMN_TITLE, receivedShow.getTitle());
-        values.put(WtaContract.ShowEntry.COLUMN_OVERVIEW, receivedShow.getOverview());
+        values.put(WtaContract.ShowEntry.COLUMN_TITLE, Utility.checkForNullValues(receivedShow.getTitle(), Utility.UNKNOWN_TITLE));
+        values.put(WtaContract.ShowEntry.COLUMN_OVERVIEW, Utility.checkForNullValues(receivedShow.getOverview(), Utility.UNKNOWN_OVERVIEW));
         values.put(WtaContract.ShowEntry.COLUMN_POSTER_PATH, Utility.checkForPosterNullValues(receivedShow.getImages(), null));
-        values.put(WtaContract.ShowEntry.COLUMN_STATUS, receivedShow.getStatus());
+        values.put(WtaContract.ShowEntry.COLUMN_BANNER_PATH, Utility.checkForBannerNullValues(receivedShow.getImages(), null));
+        values.put(WtaContract.ShowEntry.COLUMN_STATUS, Utility.checkForNullValues(receivedShow.getStatus(), Utility.UNKNOWN_STATUS));
         values.put(WtaContract.ShowEntry.COLUMN_YEAR, receivedShow.getYear());
         values.put(WtaContract.ShowEntry.COLUMN_FIRST_AIRED, Utility.checkForNullValues(receivedShow.getFirst_aired(), null));
-        values.put(WtaContract.ShowEntry.COLUMN_AIR_DAY, Utility.checkForNullValues(receivedShow.getAirs(), Utility.UNKNOWN_AIR_DAY));
+        values.put(WtaContract.ShowEntry.COLUMN_AIR_DAY, Utility.checkForNullValues(receivedShow.getAirs(), Utility.UNKNOWN_AIR_INFO));
         values.put(WtaContract.ShowEntry.COLUMN_RUNTIME, receivedShow.getRuntime());
-        values.put(WtaContract.ShowEntry.COLUMN_NETWORK, receivedShow.getNetwork());
+        values.put(WtaContract.ShowEntry.COLUMN_NETWORK, Utility.checkForNullValues(receivedShow.getNetwork(), Utility.UNKNOWN_NETWORK));
         values.put(WtaContract.ShowEntry.COLUMN_COUNTRY, receivedShow.getCountry());
         values.put(WtaContract.ShowEntry.COLUMN_HOMEPAGE, receivedShow.getHomepage());
         values.put(WtaContract.ShowEntry.COLUMN_RATING, receivedShow.getRating());
         values.put(WtaContract.ShowEntry.COLUMN_VOTE_COUNT, receivedShow.getVotes());
-        values.put(WtaContract.ShowEntry.COLUMN_LANGUAGE, receivedShow.getLanguage());
+        values.put(WtaContract.ShowEntry.COLUMN_LANGUAGE, Utility.checkForNullValues(receivedShow.getLanguage(), Utility.UNKNOWN_LANGUAGE));
         values.put(WtaContract.ShowEntry.COLUMN_AIRED_EPISODES, receivedShow.getAired_episodes());
-        values.put(WtaContract.ShowEntry.COLUMN_WATCHING, 0);
-        values.put(WtaContract.ShowEntry.COLUMN_WATCHED, 0);
-        values.put(WtaContract.ShowEntry.COLUMN_WATCHLIST, 0);
         values.put(WtaContract.ShowEntry.COLUMN_WTA_UPDATE_DATE, now.getTime());
         if (score!=null) {
             values.put(WtaContract.ShowEntry.COLUMN_LAST_SEARCH_RESULT, 1);
@@ -377,7 +463,7 @@ public class Utility {
         }
     }
 
-    private static Vector<Integer> processSeasonEpisodes(String logTag, Integer seasonId, List<Episode> episodes, Vector<ContentValues> episodesValues) {
+    private static Vector<Integer> processSeasonEpisodes(Integer seasonId, Integer seasonNumber, List<Episode> episodes, Vector<ContentValues> episodesValues) {
         Vector<Integer> receivedEpisodeNumbers = new Vector<>();
 
         if ((episodes!=null) && (!episodes.isEmpty())) {
@@ -388,13 +474,13 @@ public class Utility {
                 ContentValues values = new ContentValues();
                 values.put(WtaContract.EpisodeEntry._ID, episode.getIds().getTrakt());
                 values.put(WtaContract.EpisodeEntry.COLUMN_NUMBER, episode.getNumber());
-                values.put(WtaContract.EpisodeEntry.COLUMN_TITLE, episode.getTitle());
-                values.put(WtaContract.EpisodeEntry.COLUMN_OVERVIEW, episode.getOverview());
+                values.put(WtaContract.EpisodeEntry.COLUMN_TITLE, Utility.checkForNullValues(episode.getTitle(), Utility.UNKNOWN_TITLE));
+                values.put(WtaContract.EpisodeEntry.COLUMN_OVERVIEW, Utility.checkForNullValues(episode.getOverview(), Utility.UNKNOWN_OVERVIEW));
                 values.put(WtaContract.EpisodeEntry.COLUMN_SCREENSHOT_PATH, Utility.checkForScreenshotNullValues(episode.getImages(), null));
                 values.put(WtaContract.EpisodeEntry.COLUMN_FIRST_AIRED, Utility.checkForNullValues(episode.getFirst_aired(), null));
                 values.put(WtaContract.EpisodeEntry.COLUMN_RATING, episode.getRating());
                 values.put(WtaContract.EpisodeEntry.COLUMN_VOTE_COUNT, episode.getVotes());
-                values.put(WtaContract.EpisodeEntry.COLUMN_WATCHLIST, 0);
+                values.put(WtaContract.EpisodeEntry.COLUMN_SEASON_NUMBER, seasonNumber);
                 values.put(WtaContract.EpisodeEntry.COLUMN_SEASON_ID, seasonId);
 
                 receivedEpisodeNumbers.add(episode.getNumber());
@@ -444,6 +530,13 @@ public class Utility {
                         new String[] {Long.toString(cal.getTimeInMillis())});
     }
 
+    private static String checkForNullValues(String value, String defaultValue) {
+        if ((value != null) && (!value.isEmpty())) {
+            return value;
+        }
+        return defaultValue;
+    }
+
     private static Long checkForNullValues(Date date, Long defaultValue) {
         if (date != null) {
             return date.getTime();
@@ -453,7 +546,15 @@ public class Utility {
 
     private static String checkForNullValues(AirInfo airInfo, String defaultValue) {
         if (airInfo != null) {
-            return airInfo.getDay() + ", " + airInfo.getTime() + " (" + airInfo.getTimezone() + ")";
+            String day = airInfo.getDay();
+            String time = airInfo.getTime();
+            String timezone = airInfo.getTimezone();
+            return ((day==null)?Utility.UNKNOWN_AIR_DAY:day) + ", " +
+                    ((time==null)?Utility.UNKNOWN_AIR_TIME:time) + " (" +
+                    ((timezone==null)?Utility.UNKNOWN_AIR_TIMEZONE:Utility
+                            .capitalizeAndFormatDelimiters(timezone,
+                                    new char[]{' ','_','/','-'},
+                                    new char[]{'/','-'})) + ")";
         }
         return defaultValue;
     }
@@ -468,6 +569,13 @@ public class Utility {
     private static String checkForPosterNullValues(ImageList imageList, String defaultValue) {
         if ((imageList != null) && (imageList.getPoster()!=null)){
             return imageList.getPoster().getFull();
+        }
+        return defaultValue;
+    }
+
+    private static String checkForBannerNullValues(ImageList imageList, String defaultValue) {
+        if ((imageList != null) && (imageList.getBanner()!=null)){
+            return imageList.getBanner().getFull();
         }
         return defaultValue;
     }

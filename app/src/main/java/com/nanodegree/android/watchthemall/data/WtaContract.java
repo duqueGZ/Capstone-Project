@@ -14,7 +14,6 @@ public class WtaContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final String PATH_SHOWS = "shows";
-    public static final String PATH_LAST_SEARCHED_SHOWS = "lastsearch";
     public static final String PATH_SHOW_GENRES = "showgenres";
     public static final String PATH_SHOW_PEOPLE = "showpeople";
     public static final String PATH_SEASONS = "seasons";
@@ -46,6 +45,7 @@ public class WtaContract {
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_OVERVIEW = "overview";
         public static final String COLUMN_POSTER_PATH = "poster_path";
+        public static final String COLUMN_BANNER_PATH = "banner_path";
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_YEAR = "year";
         public static final String COLUMN_FIRST_AIRED = "first_aired";
@@ -97,6 +97,9 @@ public class WtaContract {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_SEASONS).build();
+        public static final Uri SHOW_SEASONS_CONTENT_URI =
+                WtaContract.ShowEntry.CONTENT_URI.buildUpon()
+                        .appendPath(WtaContract.PATH_SEASONS).build();
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" +
@@ -117,6 +120,10 @@ public class WtaContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
+        public static Uri buildShowSeasonsUri(long id) {
+            return ContentUris.withAppendedId(SHOW_SEASONS_CONTENT_URI, id);
+        }
+
         public static String getSeasonIdFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
@@ -131,6 +138,9 @@ public class WtaContract {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_EPISODES).build();
+        public static final Uri SEASON_EPISODES_CONTENT_URI =
+                WtaContract.SeasonEntry.CONTENT_URI.buildUpon()
+                        .appendPath(WtaContract.PATH_EPISODES).build();
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" +
@@ -148,11 +158,17 @@ public class WtaContract {
         public static final String COLUMN_FIRST_AIRED = "first_aired";
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_VOTE_COUNT = "vote_count";
+        public static final String COLUMN_SEASON_NUMBER = "season_number";
         public static final String COLUMN_SEASON_ID = "season_id";
+        public static final String COLUMN_WATCHED = "watched";
         public static final String COLUMN_WATCHLIST = "watchlist";
 
         public static Uri buildEpisodeUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildSeasonEpisodesUri(long id) {
+            return ContentUris.withAppendedId(SEASON_EPISODES_CONTENT_URI, id);
         }
 
         public static String getEpisodeIdFromUri(Uri uri) {
@@ -169,6 +185,12 @@ public class WtaContract {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_COMMENTS).build();
+        public static final Uri SHOW_COMMENTS_CONTENT_URI =
+                WtaContract.ShowEntry.CONTENT_URI.buildUpon()
+                        .appendPath(WtaContract.PATH_COMMENTS).build();
+        public static final Uri EPISODE_COMMENTS_CONTENT_URI =
+                WtaContract.EpisodeEntry.CONTENT_URI.buildUpon()
+                        .appendPath(WtaContract.PATH_COMMENTS).build();
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" +
@@ -190,6 +212,14 @@ public class WtaContract {
 
         public static Uri buildCommentUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildShowCommentsUri(long id) {
+            return ContentUris.withAppendedId(SHOW_COMMENTS_CONTENT_URI, id);
+        }
+
+        public static Uri buildEpisodeCommentsUri(long id) {
+            return ContentUris.withAppendedId(EPISODE_COMMENTS_CONTENT_URI, id);
         }
 
         public static String getCommentIdFromUri(Uri uri) {

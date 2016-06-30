@@ -17,7 +17,7 @@ import com.nanodegree.android.watchthemall.api.trakt.TraktService;
 import com.nanodegree.android.watchthemall.data.WtaContract;
 import com.nanodegree.android.watchthemall.util.Utility;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * A Sync Adapter for retrieving Trakt Popular Shows data
@@ -45,7 +45,14 @@ public class WtaSyncAdapter extends AbstractThreadedSyncAdapter {
 
             Utility.synchronizeGenresData(getContext(), LOG_TAG, traktService);
 
-            Utility.synchronizePopularShowsData(getContext(), LOG_TAG, traktService);
+            List<Integer> showIds =
+                    Utility.synchronizePopularShowsData(getContext(), LOG_TAG, traktService);
+
+            for (Integer id : showIds) {
+                Utility.synchronizeShowPeople(getContext(), LOG_TAG, traktService, id);
+                Utility.synchronizeShowSeasons(getContext(), LOG_TAG, traktService, id);
+                Utility.synchronizeShowComments(getContext(), LOG_TAG, traktService, id);
+            }
 
             Log.d(LOG_TAG, "WtaSyncAdapter correctly ended");
         } catch (Exception e) {
