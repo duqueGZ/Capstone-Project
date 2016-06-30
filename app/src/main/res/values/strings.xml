@@ -88,6 +88,10 @@
     <string name="episode_actions">Episode actions</string>
     <string name="episode_screenshot">Episode screenshot</string>
 
+    <!-- Widgets related strings -->
+    <string name="title_widget_popular_shows">WTA Popular Shows</string>
+    <string name="no_info_available">No shows data available</string>
+
     <!-- Other strings -->
     <string name="sdf_format">yyyy-MM-dd</string>
     <string name="sdf_with_hour_format">yyyy-MM-dd HH:mm:ss</string>

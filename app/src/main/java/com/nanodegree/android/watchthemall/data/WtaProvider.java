@@ -28,6 +28,9 @@ public class WtaProvider extends ContentProvider {
     //"show.watchlist = ?" selection String
     public static final String sWatchlistShowSelection = WtaContract.ShowEntry.TABLE_NAME + "." +
             WtaContract.ShowEntry.COLUMN_WATCHLIST + " = ? ";
+    //"show.popularity > ?" selection String
+    public static final String sPopularityShowSelection = WtaContract.ShowEntry.TABLE_NAME + "." +
+            WtaContract.ShowEntry.COLUMN_POPULARITY + " > ? ";
     //"show.last_search_result = ?" selection String
     public static final String sLastSearchedShowSelection = WtaContract.ShowEntry.TABLE_NAME + "." +
             WtaContract.ShowEntry.COLUMN_LAST_SEARCH_RESULT + " = ? ";

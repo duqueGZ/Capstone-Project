@@ -5,7 +5,9 @@ import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.os.Build;
@@ -26,6 +28,9 @@ public class WtaSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private final String LOG_TAG = WtaSyncAdapter.class.getSimpleName();
 
+    public static final String ACTION_DATA_UPDATED =
+            "com.nanodegree.android.watchthemall.ACTION_DATA_UPDATED";
+
     // Interval at which to sync with the Trakt info, in seconds.
     // 60 seconds (1 minute) * 60 * 6 = 6 hours
     private static final int SYNC_INTERVAL = 60 * 60 * 6;
@@ -45,8 +50,16 @@ public class WtaSyncAdapter extends AbstractThreadedSyncAdapter {
 
             Utility.synchronizeGenresData(getContext(), LOG_TAG, traktService);
 
+            // First delete last popularity marks
+            ContentValues updateValues = new ContentValues();
+            updateValues.put(WtaContract.ShowEntry.COLUMN_POPULARITY, 0);
+            getContext().getContentResolver().update(WtaContract.ShowEntry.CONTENT_URI, updateValues,
+                    null, null);
+
             List<Integer> showIds =
                     Utility.synchronizePopularShowsData(getContext(), LOG_TAG, traktService);
+
+            updateWidgets();
 
             for (Integer id : showIds) {
                 Utility.synchronizeShowPeople(getContext(), LOG_TAG, traktService, id);
@@ -148,5 +161,13 @@ public class WtaSyncAdapter extends AbstractThreadedSyncAdapter {
          * Finally, let's do a sync to get things started
          */
         syncImmediately(context);
+    }
+
+    private void updateWidgets() {
+        Context context = getContext();
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+                .setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
     }
 }

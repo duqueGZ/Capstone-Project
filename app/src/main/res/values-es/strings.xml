@@ -75,6 +75,10 @@
     <string name="episode_actions">Acciones sobre el episodio</string>
     <string name="episode_screenshot">Fotograma del capítulo</string>
 
+    <!-- Widgets related strings -->
+    <string name="title_widget_popular_shows">WTA Series Populares</string>
+    <string name="no_info_available">No hay datos de series disponibles</string>
+
     <!-- Other strings -->
     <string name="sdf_format">dd-MM-yyyy</string>
     <string name="sdf_with_hour_format">dd-MM-yyyy HH:mm:ss</string>

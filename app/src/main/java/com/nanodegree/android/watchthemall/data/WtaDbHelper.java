@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class WtaDbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
     private static final String DATABASE_NAME = "watch.them.all.db";
 
     public WtaDbHelper(Context context) {
@@ -26,6 +26,7 @@ public class WtaDbHelper extends SQLiteOpenHelper {
                 WtaContract.ShowEntry.COLUMN_OVERVIEW + " TEXT, " +
                 WtaContract.ShowEntry.COLUMN_POSTER_PATH + " TEXT, " +
                 WtaContract.ShowEntry.COLUMN_BANNER_PATH + " TEXT, " +
+                WtaContract.ShowEntry.COLUMN_THUMB_PATH + " TEXT, " +
                 WtaContract.ShowEntry.COLUMN_STATUS + " TEXT, " +
                 WtaContract.ShowEntry.COLUMN_YEAR + " INTEGER, " +
                 WtaContract.ShowEntry.COLUMN_FIRST_AIRED + " INTEGER, " +
@@ -43,7 +44,8 @@ public class WtaDbHelper extends SQLiteOpenHelper {
                 WtaContract.ShowEntry.COLUMN_WATCHLIST + " INTEGER DEFAULT 0, " +
                 WtaContract.ShowEntry.COLUMN_WTA_UPDATE_DATE + " INTEGER, " +
                 WtaContract.ShowEntry.COLUMN_LAST_SEARCH_RESULT + " INTEGER DEFAULT 0, " +
-                WtaContract.ShowEntry.COLUMN_SEARCH_SCORE + " REAL " +
+                WtaContract.ShowEntry.COLUMN_SEARCH_SCORE + " REAL, " +
+                WtaContract.ShowEntry.COLUMN_POPULARITY + " INTEGER DEFAULT 0 " +
                 ");";
 
         final String SQL_CREATE_SHOW_GENRE_TABLE = "CREATE TABLE " +

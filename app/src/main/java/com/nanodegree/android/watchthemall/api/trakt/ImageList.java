@@ -9,6 +9,7 @@ public class ImageList {
     private Image headshot;
     private Image poster;
     private Image banner;
+    private Image thumb;
 
     public Image getScreenshot() {
         return screenshot;
@@ -42,6 +43,14 @@ public class ImageList {
         this.banner = banner;
     }
 
+    public Image getThumb() {
+        return thumb;
+    }
+
+    public void setThumb(Image thumb) {
+        this.thumb = thumb;
+    }
+
     @Override
     public String toString() {
         return "ImageList{" +
@@ -49,6 +58,7 @@ public class ImageList {
                 ", headshot=" + ((headshot==null)?null:headshot.toString()) +
                 ", poster=" + ((poster==null)?null:poster.toString()) +
                 ", banner=" + ((banner==null)?null:banner.toString()) +
+                ", thumb=" + ((thumb==null)?null:thumb.toString()) +
                 '}';
     }
 }

@@ -98,6 +98,24 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
+
+        <!-- Popular Shows Widget -->
+        <receiver
+            android:name=".widget.PopularShowsWidgetProvider"
+            android:label="@string/title_widget_popular_shows"
+            android:enabled="@bool/widget_list_enabled">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.nanodegree.android.watchthemall.ACTION_DATA_UPDATED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_popular_shows" />
+        </receiver>
+        <service
+            android:name=".widget.PopularShowsWidgetRemoteViewsService"
+            android:enabled="@bool/widget_list_enabled"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

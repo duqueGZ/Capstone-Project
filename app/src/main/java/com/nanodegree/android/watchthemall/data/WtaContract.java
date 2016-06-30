@@ -46,6 +46,7 @@ public class WtaContract {
         public static final String COLUMN_OVERVIEW = "overview";
         public static final String COLUMN_POSTER_PATH = "poster_path";
         public static final String COLUMN_BANNER_PATH = "banner_path";
+        public static final String COLUMN_THUMB_PATH = "thumb_path";
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_YEAR = "year";
         public static final String COLUMN_FIRST_AIRED = "first_aired";
@@ -64,6 +65,7 @@ public class WtaContract {
         public static final String COLUMN_WTA_UPDATE_DATE = "update_date";
         public static final String COLUMN_LAST_SEARCH_RESULT = "last_search_result";
         public static final String COLUMN_SEARCH_SCORE = "search_score";
+        public static final String COLUMN_POPULARITY = "popularity";
 
         public static final String GENRE_RELATION_TABLE_NAME = "showgenre";
 

@@ -192,9 +192,11 @@ public class Utility {
             receivedIds = new Vector<>(receivedShows.size());
             Vector<ContentValues> showsValues = new Vector<>(receivedShows.size());
             Vector<ContentValues> showGenreValues = new Vector<>();
+            int popularity = 1;
             for (Show show: receivedShows) {
                 receivedIds.add(show.getIds().getTrakt());
-                Utility.processReceivedShow(show, showsValues, showGenreValues, null);
+                Utility.processReceivedShow(popularity, show, showsValues, showGenreValues, null);
+                popularity++;
             }
 
             Utility.updateShowsDbInfo(context, showsValues, showGenreValues, WtaContract.ShowEntry.CONTENT_URI);
@@ -402,13 +404,13 @@ public class Utility {
         Response<Show> showResponse = showSummary.execute();
         if (showResponse.isSuccessful()) {
             Show show = showResponse.body();
-            processReceivedShow(show, showsValues, showGenreValues, score);
+            processReceivedShow(-1, show, showsValues, showGenreValues, score);
         } else {
             Log.e(logTag, "Error occurred calling showSummary API endpoint: " + showResponse.message());
         }
     }
 
-    private static void processReceivedShow(Show receivedShow, Vector<ContentValues> showsValues,
+    private static void processReceivedShow(int popularity, Show receivedShow, Vector<ContentValues> showsValues,
                                             Vector<ContentValues> showGenreValues, Double score) throws IOException {
         Date now = new Date();
         ContentValues values = new ContentValues();
@@ -417,6 +419,7 @@ public class Utility {
         values.put(WtaContract.ShowEntry.COLUMN_OVERVIEW, Utility.checkForNullValues(receivedShow.getOverview(), Utility.UNKNOWN_OVERVIEW));
         values.put(WtaContract.ShowEntry.COLUMN_POSTER_PATH, Utility.checkForPosterNullValues(receivedShow.getImages(), null));
         values.put(WtaContract.ShowEntry.COLUMN_BANNER_PATH, Utility.checkForBannerNullValues(receivedShow.getImages(), null));
+        values.put(WtaContract.ShowEntry.COLUMN_THUMB_PATH, Utility.checkForThumbNullValues(receivedShow.getImages(), null));
         values.put(WtaContract.ShowEntry.COLUMN_STATUS, Utility.checkForNullValues(receivedShow.getStatus(), Utility.UNKNOWN_STATUS));
         values.put(WtaContract.ShowEntry.COLUMN_YEAR, receivedShow.getYear());
         values.put(WtaContract.ShowEntry.COLUMN_FIRST_AIRED, Utility.checkForNullValues(receivedShow.getFirst_aired(), null));
@@ -433,6 +436,9 @@ public class Utility {
         if (score!=null) {
             values.put(WtaContract.ShowEntry.COLUMN_LAST_SEARCH_RESULT, 1);
             values.put(WtaContract.ShowEntry.COLUMN_SEARCH_SCORE, score);
+        }
+        if (popularity<=(Integer.valueOf(Utility.MAX_SHOWS))) {
+            values.put(WtaContract.ShowEntry.COLUMN_POPULARITY, popularity);
         }
         List<String> showGenres = receivedShow.getGenres();
         if (showGenres!=null) {
@@ -591,6 +597,13 @@ public class Utility {
     private static String checkForScreenshotNullValues(ImageList imageList, String defaultValue) {
         if ((imageList != null) && (imageList.getScreenshot()!=null)){
             return imageList.getScreenshot().getFull();
+        }
+        return defaultValue;
+    }
+
+    private static String checkForThumbNullValues(ImageList imageList, String defaultValue) {
+        if ((imageList != null) && (imageList.getThumb()!=null)){
+            return imageList.getThumb().getFull();
         }
         return defaultValue;
     }
