@@ -2,10 +2,10 @@ package com.nanodegree.android.watchthemall;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar mLoadingSpinner;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-    @BindView(R.id.left_drawer)
+    @BindView(R.id.start_drawer)
     ListView mDrawerList;
     @BindView(R.id.adView)
     AdView mAdView;
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         WtaSyncAdapter.initializeSyncAdapter(this);
 
         if (savedInstanceState==null) {
-            mDrawerLayout.openDrawer(Gravity.LEFT);
+            mDrawerLayout.openDrawer(GravityCompat.START);
             mCloseDrawerRunnable = new CustomRunnable(mDrawerLayout);
             mDrawerLayout.postDelayed(mCloseDrawerRunnable, 1000);
         }
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            mDrawer.closeDrawer(Gravity.LEFT);
+            mDrawer.closeDrawer(GravityCompat.START);
             MainActivity.this.mCloseDrawerRunnable = null;
         }
     }

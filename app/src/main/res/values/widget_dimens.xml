@@ -9,4 +9,5 @@
     <dimen name="widget_popular_series_icon_padding">2dp</dimen>
     <dimen name="widget_popular_series_item_padding">10dp</dimen>
     <dimen name="widget_popular_series_title_padding">20dp</dimen>
+    <dimen name="widget_divider_height">0.5dp</dimen>
 </resources>

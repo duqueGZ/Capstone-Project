@@ -28,8 +28,7 @@ public class SeasonsAdapter extends CursorTreeAdapter {
         WtaContract.EpisodeEntry.COLUMN_NUMBER,
         WtaContract.EpisodeEntry.COLUMN_TITLE,
         WtaContract.EpisodeEntry.COLUMN_WATCHED,
-        WtaContract.EpisodeEntry.COLUMN_WATCHLIST,
-        WtaContract.EpisodeEntry.COLUMN_SEASON_ID
+        WtaContract.EpisodeEntry.COLUMN_WATCHLIST
     };
     // These indices are tied to EPISODE_COLUMNS. If EPISODE_COLUMNS changes, these must change too.
     public static final int COL_EPISODE_ID = 0;
@@ -37,7 +36,6 @@ public class SeasonsAdapter extends CursorTreeAdapter {
     public static final int COL_EPISODE_TITLE = 2;
     public static final int COL_WATCHED = 3;
     public static final int COL_WATCHLIST = 4;
-    public static final int COL_SEASON_ID = 5;
 
     private Context mContext;
 

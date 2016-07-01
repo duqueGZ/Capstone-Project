@@ -89,7 +89,7 @@
     </LinearLayout>
 
     <!-- The navigation drawer -->
-    <ListView android:id="@+id/left_drawer"
+    <ListView android:id="@+id/start_drawer"
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"

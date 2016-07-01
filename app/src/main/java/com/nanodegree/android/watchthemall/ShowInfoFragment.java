@@ -32,7 +32,6 @@ import butterknife.Unbinder;
 public class ShowInfoFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String LOG_TAG = ShowInfoFragment.class.getSimpleName();
     private static final int DETAIL_SHOW_LOADER_ID = 1;
     private static final int DETAIL_SHOW_GENRES_LOADER_ID = 2;
     private static final int DETAIL_SHOW_PEOPLE_LOADER_ID = 3;
@@ -109,7 +108,6 @@ public class ShowInfoFragment extends Fragment
     TextView mShowRuntime;
 
     private Unbinder mButterKnifeUnbinder;
-    private int mShowId;
     private Uri mUri;
     private PeopleAdapter mPeopleAdapter;
 
@@ -194,15 +192,13 @@ public class ShowInfoFragment extends Fragment
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         long loaderId = loader.getId();
-        if ((loaderId == DETAIL_SHOW_LOADER_ID) || (loaderId == DETAIL_SHOW_GENRES_LOADER_ID)) {
-            //Do nothing
-        } else if (loaderId == DETAIL_SHOW_PEOPLE_LOADER_ID) {
+        if (loaderId == DETAIL_SHOW_PEOPLE_LOADER_ID) {
             mPeopleAdapter.swapCursor(null);
         }
+        //else: Do nothing
     }
 
     private void onDetailShowLoadFinished(Cursor data) {
-        mShowId = data.getInt(COL_ID);
 
         String posterPath = data.getString(COL_POSTER_PATH);
         if (posterPath!=null) {
@@ -218,10 +214,10 @@ public class ShowInfoFragment extends Fragment
         Integer voteCount = data.getInt(COL_VOTE_COUNT);
         mShowVoteCount.setText("(" + voteCount + " " +
                 getActivity().getString(R.string.votes_label) + ")");
-        Long firstAiredDate = data.getLong(COL_FIRST_AIRED);
-        if (firstAiredDate==null) {
+        if (data.isNull(COL_FIRST_AIRED)) {
             mShowFirstAired.setText(getActivity().getString(R.string.unknown_date));
         } else {
+            Long firstAiredDate = data.getLong(COL_FIRST_AIRED);
             SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.sdf_format));
             mShowFirstAired.setText(sdf.format(new Date(firstAiredDate)));
         }

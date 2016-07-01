@@ -28,7 +28,6 @@ import butterknife.Unbinder;
 public class EpisodeInfoFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String LOG_TAG = EpisodeInfoFragment.class.getSimpleName();
     private static final int DETAIL_EPISODE_LOADER_ID = 7;
 
     private static final String[] EPISODE_COLUMNS = {
@@ -55,7 +54,6 @@ public class EpisodeInfoFragment extends Fragment
     TextView mEpisodeFirstAired;
 
     private Unbinder mButterKnifeUnbinder;
-    private int mEpisodeId;
     private Uri mUri;
 
     public EpisodeInfoFragment() {
@@ -112,17 +110,16 @@ public class EpisodeInfoFragment extends Fragment
     }
 
     private void onDetailEpisodeLoadFinished(Cursor data) {
-        mEpisodeId = data.getInt(COL_ID);
 
         Double rating = data.getDouble(COL_RATING);
         mEpisodeRating.setText(new DecimalFormat("0.##").format(rating));
         Integer voteCount = data.getInt(COL_VOTE_COUNT);
         mEpisodeVoteCount.setText("(" + voteCount + " " +
                 getActivity().getString(R.string.votes_label) + ")");
-        Long firstAiredDate = data.getLong(COL_FIRST_AIRED);
-        if (firstAiredDate==null) {
+        if (data.isNull(COL_FIRST_AIRED)) {
             mEpisodeFirstAired.setText(getActivity().getString(R.string.unknown_date));
         } else {
+            Long firstAiredDate = data.getLong(COL_FIRST_AIRED);
             SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.sdf_format));
             mEpisodeFirstAired.setText(sdf.format(new Date(firstAiredDate)));
         }

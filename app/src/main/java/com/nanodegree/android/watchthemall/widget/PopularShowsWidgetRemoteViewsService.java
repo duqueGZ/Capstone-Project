@@ -1,6 +1,5 @@
 package com.nanodegree.android.watchthemall.widget;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -15,9 +14,7 @@ import android.widget.RemoteViewsService;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.nanodegree.android.watchthemall.MainActivity;
 import com.nanodegree.android.watchthemall.R;
-import com.nanodegree.android.watchthemall.ShowDetailActivity;
 import com.nanodegree.android.watchthemall.data.WtaContract;
 import com.nanodegree.android.watchthemall.data.WtaProvider;
 
@@ -36,16 +33,13 @@ public class PopularShowsWidgetRemoteViewsService extends RemoteViewsService {
             WtaContract.ShowEntry.TABLE_NAME + "."
                     + WtaContract.ShowEntry.COLUMN_YEAR,
             WtaContract.ShowEntry.TABLE_NAME + "."
-                    + WtaContract.ShowEntry.COLUMN_THUMB_PATH,
-            WtaContract.ShowEntry.TABLE_NAME + "."
-                    + WtaContract.ShowEntry.COLUMN_POPULARITY
+                    + WtaContract.ShowEntry.COLUMN_THUMB_PATH
     };
     // These indices are tied to SCORE_COLUMNS. If SCORE_COLUMNS changes, these must change too.
     private static final int COL_ID = 0;
     private static final int COL_TITLE = 1;
     private static final int COL_YEAR = 2;
     private static final int COL_THUMB_PATH = 3;
-    private static final int COL_POPULARITY = 4;
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {

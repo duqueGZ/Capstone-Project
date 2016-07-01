@@ -24,8 +24,6 @@ import butterknife.Unbinder;
 public class EpisodeCommentsFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String LOG_TAG = EpisodeCommentsFragment.class.getSimpleName();
-
     private static final int DETAIL_EPISODE_COMMENTS_LOADER_ID = 8;
 
     // These columns must be the same that those defined in ShowCommentsFragment, in order to get
@@ -34,9 +32,7 @@ public class EpisodeCommentsFragment extends Fragment
             WtaContract.CommentEntry._ID,
             WtaContract.CommentEntry.COLUMN_CREATED_AT,
             WtaContract.CommentEntry.COLUMN_CONTENT,
-            WtaContract.CommentEntry.COLUMN_USER,
-            WtaContract.CommentEntry.COLUMN_SHOW_ID,
-            WtaContract.CommentEntry.COLUMN_EPISODE_ID
+            WtaContract.CommentEntry.COLUMN_USER
     };
 
     @BindView(R.id.commentList)

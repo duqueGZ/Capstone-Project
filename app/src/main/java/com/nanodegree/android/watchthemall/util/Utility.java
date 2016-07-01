@@ -61,16 +61,6 @@ public class Utility {
     //Trakt API stuff
     private static final String TRAKT_API_KEY_HEADER = "trakt-api-key";
     private static final String TRAKT_API_BASE_URL = "https://api-v2launch.trakt.tv";
-    private static final String UNKNOWN_USER = "Unknown user";
-    private static final String UNKNOWN_AIR_INFO = "No air info available";
-    private static final String UNKNOWN_AIR_DAY = "Unknown air day";
-    private static final String UNKNOWN_AIR_TIME = "Unknown air time";
-    private static final String UNKNOWN_AIR_TIMEZONE = "Unknown air timezone";
-    private static final String UNKNOWN_TITLE = "Unknown title";
-    private static final String UNKNOWN_OVERVIEW = "No overview available";
-    private static final String UNKNOWN_NETWORK = "Unknown air network";
-    private static final String UNKNOWN_LANGUAGE = "Unknown language";
-    private static final String UNKNOWN_STATUS = "Unknown current show status";
 
     //WebView parameters
     public static final String HTML_TEXT_FORMAT =
@@ -169,7 +159,7 @@ public class Utility {
             for (SearchResult result: searchResults) {
                 showId = result.getShow().getIds().getTrakt();
                 receivedIds.add(showId);
-                processShowSummaryData(logTag, traktService, showsValues, showGenreValues, showId, result.getScore());
+                processShowSummaryData(context, logTag, traktService, showsValues, showGenreValues, showId, result.getScore());
             }
 
             updateShowsDbInfo(context, showsValues, showGenreValues,
@@ -195,7 +185,7 @@ public class Utility {
             int popularity = 1;
             for (Show show: receivedShows) {
                 receivedIds.add(show.getIds().getTrakt());
-                Utility.processReceivedShow(popularity, show, showsValues, showGenreValues, null);
+                Utility.processReceivedShow(context, popularity, show, showsValues, showGenreValues, null);
                 popularity++;
             }
 
@@ -215,7 +205,7 @@ public class Utility {
         if (commentsResponse.isSuccessful()) {
             List<Comment> receivedComments = commentsResponse.body();
             Vector<ContentValues> commentsValues = new Vector<>(receivedComments.size());
-            Utility.processReceivedComments(receivedComments, commentsValues, showId);
+            Utility.processReceivedComments(context, receivedComments, commentsValues, showId);
 
             // Add to DB
             if (commentsValues.size() > 0) {
@@ -303,9 +293,9 @@ public class Utility {
 
                 seasonsValues.add(values);
 
-                episodes = Utility.processSeasonEpisodes(season.getIds().getTrakt(), season.getNumber(), season.getEpisodes(), episodesValues);
+                episodes = Utility.processSeasonEpisodes(context, season.getIds().getTrakt(), season.getNumber(), season.getEpisodes(), episodesValues);
                 for (Integer episodeNumber : episodes) {
-                    Utility.processEpisodeComments(logTag, traktService, showId, season.getNumber(), episodeNumber, commentsValues);
+                    Utility.processEpisodeComments(context, logTag, traktService, showId, season.getNumber(), episodeNumber, commentsValues);
                 }
             }
 
@@ -397,40 +387,46 @@ public class Utility {
         return false;
     }
 
-    private static void processShowSummaryData(String logTag, TraktService traktService, Vector<ContentValues> showsValues,
+    private static void processShowSummaryData(Context context, String logTag, TraktService traktService, Vector<ContentValues> showsValues,
                                                Vector<ContentValues> showGenreValues, Integer showId, Double score) throws IOException {
 
         Call<Show> showSummary = traktService.showSummary(showId);
         Response<Show> showResponse = showSummary.execute();
         if (showResponse.isSuccessful()) {
             Show show = showResponse.body();
-            processReceivedShow(-1, show, showsValues, showGenreValues, score);
+            processReceivedShow(context, -1, show, showsValues, showGenreValues, score);
         } else {
             Log.e(logTag, "Error occurred calling showSummary API endpoint: " + showResponse.message());
         }
     }
 
-    private static void processReceivedShow(int popularity, Show receivedShow, Vector<ContentValues> showsValues,
+    private static void processReceivedShow(Context context, int popularity, Show receivedShow, Vector<ContentValues> showsValues,
                                             Vector<ContentValues> showGenreValues, Double score) throws IOException {
         Date now = new Date();
         ContentValues values = new ContentValues();
         values.put(WtaContract.ShowEntry._ID, receivedShow.getIds().getTrakt());
-        values.put(WtaContract.ShowEntry.COLUMN_TITLE, Utility.checkForNullValues(receivedShow.getTitle(), Utility.UNKNOWN_TITLE));
-        values.put(WtaContract.ShowEntry.COLUMN_OVERVIEW, Utility.checkForNullValues(receivedShow.getOverview(), Utility.UNKNOWN_OVERVIEW));
+        values.put(WtaContract.ShowEntry.COLUMN_TITLE, Utility.checkForNullValues(receivedShow.getTitle(),
+                context.getString(R.string.unknown_title)));
+        values.put(WtaContract.ShowEntry.COLUMN_OVERVIEW, Utility.checkForNullValues(receivedShow.getOverview(),
+                context.getString(R.string.unknown_overview)));
         values.put(WtaContract.ShowEntry.COLUMN_POSTER_PATH, Utility.checkForPosterNullValues(receivedShow.getImages(), null));
         values.put(WtaContract.ShowEntry.COLUMN_BANNER_PATH, Utility.checkForBannerNullValues(receivedShow.getImages(), null));
         values.put(WtaContract.ShowEntry.COLUMN_THUMB_PATH, Utility.checkForThumbNullValues(receivedShow.getImages(), null));
-        values.put(WtaContract.ShowEntry.COLUMN_STATUS, Utility.checkForNullValues(receivedShow.getStatus(), Utility.UNKNOWN_STATUS));
+        values.put(WtaContract.ShowEntry.COLUMN_STATUS, Utility.checkForNullValues(receivedShow.getStatus(),
+                context.getString(R.string.unknown_status)));
         values.put(WtaContract.ShowEntry.COLUMN_YEAR, receivedShow.getYear());
         values.put(WtaContract.ShowEntry.COLUMN_FIRST_AIRED, Utility.checkForNullValues(receivedShow.getFirst_aired(), null));
-        values.put(WtaContract.ShowEntry.COLUMN_AIR_DAY, Utility.checkForNullValues(receivedShow.getAirs(), Utility.UNKNOWN_AIR_INFO));
+        values.put(WtaContract.ShowEntry.COLUMN_AIR_DAY, Utility.checkForNullValues(context, receivedShow.getAirs(),
+                context.getString(R.string.unknown_air_info)));
         values.put(WtaContract.ShowEntry.COLUMN_RUNTIME, receivedShow.getRuntime());
-        values.put(WtaContract.ShowEntry.COLUMN_NETWORK, Utility.checkForNullValues(receivedShow.getNetwork(), Utility.UNKNOWN_NETWORK));
+        values.put(WtaContract.ShowEntry.COLUMN_NETWORK, Utility.checkForNullValues(receivedShow.getNetwork(),
+                context.getString(R.string.unknown_network)));
         values.put(WtaContract.ShowEntry.COLUMN_COUNTRY, receivedShow.getCountry());
         values.put(WtaContract.ShowEntry.COLUMN_HOMEPAGE, receivedShow.getHomepage());
         values.put(WtaContract.ShowEntry.COLUMN_RATING, receivedShow.getRating());
         values.put(WtaContract.ShowEntry.COLUMN_VOTE_COUNT, receivedShow.getVotes());
-        values.put(WtaContract.ShowEntry.COLUMN_LANGUAGE, Utility.checkForNullValues(receivedShow.getLanguage(), Utility.UNKNOWN_LANGUAGE));
+        values.put(WtaContract.ShowEntry.COLUMN_LANGUAGE, Utility.checkForNullValues(receivedShow.getLanguage(),
+                context.getString(R.string.unknown_language)));
         values.put(WtaContract.ShowEntry.COLUMN_AIRED_EPISODES, receivedShow.getAired_episodes());
         values.put(WtaContract.ShowEntry.COLUMN_WTA_UPDATE_DATE, now.getTime());
         if (score!=null) {
@@ -454,7 +450,7 @@ public class Utility {
         showsValues.add(values);
     }
 
-    private static void processReceivedComments(List<Comment> receivedComments, Vector<ContentValues> commentsValues, Integer showId) {
+    private static void processReceivedComments(Context context, List<Comment> receivedComments, Vector<ContentValues> commentsValues, Integer showId) {
         for (Comment comment: receivedComments) {
             ContentValues values = new ContentValues();
             values.put(WtaContract.CommentEntry._ID, comment.getId());
@@ -463,14 +459,15 @@ public class Utility {
             values.put(WtaContract.CommentEntry.COLUMN_SPOILER, comment.isSpoiler());
             values.put(WtaContract.CommentEntry.COLUMN_REVIEW, comment.isReview());
             values.put(WtaContract.CommentEntry.COLUMN_LIKES, comment.getLikes());
-            values.put(WtaContract.CommentEntry.COLUMN_USER, Utility.checkForNullValues(comment.getUser(), Utility.UNKNOWN_USER));
+            values.put(WtaContract.CommentEntry.COLUMN_USER, Utility.checkForNullValues(comment.getUser(),
+                    context.getString(R.string.unknown_user)));
             values.put(WtaContract.CommentEntry.COLUMN_SHOW_ID, showId);
 
             commentsValues.add(values);
         }
     }
 
-    private static Vector<Integer> processSeasonEpisodes(Integer seasonId, Integer seasonNumber, List<Episode> episodes, Vector<ContentValues> episodesValues) {
+    private static Vector<Integer> processSeasonEpisodes(Context context, Integer seasonId, Integer seasonNumber, List<Episode> episodes, Vector<ContentValues> episodesValues) {
         Vector<Integer> receivedEpisodeNumbers = new Vector<>();
 
         if ((episodes!=null) && (!episodes.isEmpty())) {
@@ -481,8 +478,10 @@ public class Utility {
                 ContentValues values = new ContentValues();
                 values.put(WtaContract.EpisodeEntry._ID, episode.getIds().getTrakt());
                 values.put(WtaContract.EpisodeEntry.COLUMN_NUMBER, episode.getNumber());
-                values.put(WtaContract.EpisodeEntry.COLUMN_TITLE, Utility.checkForNullValues(episode.getTitle(), Utility.UNKNOWN_TITLE));
-                values.put(WtaContract.EpisodeEntry.COLUMN_OVERVIEW, Utility.checkForNullValues(episode.getOverview(), Utility.UNKNOWN_OVERVIEW));
+                values.put(WtaContract.EpisodeEntry.COLUMN_TITLE, Utility.checkForNullValues(episode.getTitle(),
+                        context.getString(R.string.unknown_title)));
+                values.put(WtaContract.EpisodeEntry.COLUMN_OVERVIEW, Utility.checkForNullValues(episode.getOverview(),
+                        context.getString(R.string.unknown_overview)));
                 values.put(WtaContract.EpisodeEntry.COLUMN_SCREENSHOT_PATH, Utility.checkForScreenshotNullValues(episode.getImages(), null));
                 values.put(WtaContract.EpisodeEntry.COLUMN_FIRST_AIRED, Utility.checkForNullValues(episode.getFirst_aired(), null));
                 values.put(WtaContract.EpisodeEntry.COLUMN_RATING, episode.getRating());
@@ -498,13 +497,13 @@ public class Utility {
         return receivedEpisodeNumbers;
     }
 
-    private static void processEpisodeComments(String logTag, TraktService traktService, Integer showId, Integer seasonNumber,
+    private static void processEpisodeComments(Context context, String logTag, TraktService traktService, Integer showId, Integer seasonNumber,
                                         Integer episodeNumber, Vector<ContentValues> commentsValues) throws IOException {
         Call<List<Comment>> episodeComments = traktService.episodeComments(showId, seasonNumber, episodeNumber);
         Response<List<Comment>> episodesResponse = episodeComments.execute();
         if (episodesResponse.isSuccessful()) {
             List<Comment> receivedComments = episodesResponse.body();
-            processReceivedComments(receivedComments, commentsValues, showId);
+            processReceivedComments(context, receivedComments, commentsValues, showId);
         } else {
             Log.e(logTag, "Error occurred calling episodeComments API endpoint: " + episodesResponse.message());
         }
@@ -551,14 +550,14 @@ public class Utility {
         return defaultValue;
     }
 
-    private static String checkForNullValues(AirInfo airInfo, String defaultValue) {
+    private static String checkForNullValues(Context context, AirInfo airInfo, String defaultValue) {
         if (airInfo != null) {
             String day = airInfo.getDay();
             String time = airInfo.getTime();
             String timezone = airInfo.getTimezone();
-            return ((day==null)?Utility.UNKNOWN_AIR_DAY:day) + ", " +
-                    ((time==null)?Utility.UNKNOWN_AIR_TIME:time) + " (" +
-                    ((timezone==null)?Utility.UNKNOWN_AIR_TIMEZONE:Utility
+            return ((day==null)?context.getString(R.string.unknown_air_day):day) + ", " +
+                    ((time==null)?context.getString(R.string.unknown_air_time):time) + " (" +
+                    ((timezone==null)?context.getString(R.string.unknown_air_timezone):Utility
                             .capitalizeAndFormatDelimiters(timezone,
                                     new char[]{' ','_','/','-'},
                                     new char[]{'/','-'})) + ")";

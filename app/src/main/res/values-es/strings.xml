@@ -3,13 +3,23 @@
     <string name="action_settings">Ajustes</string>
 
     <!-- Main activity (search screen) -->
-    <string name="search_hint">Introduce tu búsqueda aquí...</string>
+    <string name="search_hint">Introduce tu búsqueda aquí&#8230;</string>
     <string name="empty_search_keywords_error">Por favor, introduce algún término de búsqueda</string>
     <string name="navigation_drawer_watchlist_series">Mi watchlist de series</string>
     <string name="navigation_drawer_watching_series">Mis series en curso</string>
     <string name="navigation_drawer_watched_series">Mis series vistas</string>
     <string name="unknown_date">Fecha desconocida</string>
     <string name="unknown_runtime">Duración desconocida</string>
+    <string name="unknown_user">Usuario desconocido</string>
+    <string name="unknown_air_info">Sin información de emisión disponible</string>
+    <string name="unknown_air_day">Día desconocido</string>
+    <string name="unknown_air_time">Hora desconocida</string>
+    <string name="unknown_air_timezone">Zona horaria desconocida</string>
+    <string name="unknown_title">Título desconocido</string>
+    <string name="unknown_overview">Sin sinopsis disponible</string>
+    <string name="unknown_network">Canal desconocido</string>
+    <string name="unknown_language">Lenguaje desconocido</string>
+    <string name="unknown_status">Estado actual de la serie desconocido</string>
 
     <!-- Search results screen -->
     <string name="title_activity_search_results">Series</string>
@@ -64,7 +74,7 @@
 
     <!-- Content descriptions -->
     <string name="show_poster">Cartel de la serie</string>
-    <string name="wta_logo">Logo de la aplicación</string>
+    <string name="wta_logo">Logo de WatchThemAll</string>
     <string name="search">Buscar</string>
     <string name="no_show_data">Sin datos de series disponibles</string>
     <string name="show_banner">Banner de la serie</string>

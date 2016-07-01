@@ -24,25 +24,19 @@ import butterknife.Unbinder;
 public class ShowCommentsFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String LOG_TAG = ShowCommentsFragment.class.getSimpleName();
-
     private static final int DETAIL_SHOW_COMMENTS_LOADER_ID = 5;
 
     private static final String[] COMMENT_COLUMNS = {
             WtaContract.CommentEntry._ID,
             WtaContract.CommentEntry.COLUMN_CREATED_AT,
             WtaContract.CommentEntry.COLUMN_CONTENT,
-            WtaContract.CommentEntry.COLUMN_USER,
-            WtaContract.CommentEntry.COLUMN_SHOW_ID,
-            WtaContract.CommentEntry.COLUMN_EPISODE_ID
+            WtaContract.CommentEntry.COLUMN_USER
     };
     // These indices are tied to COMMENT_COLUMNS. If COMMENT_COLUMNS changes, these must change too.
     public static final int COL_ID = 0;
     public static final int COL_CREATED_AT = 1;
     public static final int COL_CONTENT = 2;
     public static final int COL_USER = 3;
-    public static final int COL_SHOW_ID = 4;
-    public static final int COL_EPISODE_ID = 5;
 
     @BindView(R.id.commentList)
     NonScrollListView mShowCommentsListView;

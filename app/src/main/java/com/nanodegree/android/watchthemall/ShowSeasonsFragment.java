@@ -23,23 +23,19 @@ import butterknife.Unbinder;
 public class ShowSeasonsFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String LOG_TAG = ShowSeasonsFragment.class.getSimpleName();
-
     private static final int DETAIL_SHOW_SEASONS_LOADER_ID = 4;
 
     private static final String[] SEASON_COLUMNS = {
             WtaContract.SeasonEntry._ID,
             WtaContract.SeasonEntry.COLUMN_NUMBER,
             WtaContract.SeasonEntry.COLUMN_AIRED_EPISODES,
-            WtaContract.SeasonEntry.COLUMN_EPISODE_COUNT,
-            WtaContract.SeasonEntry.COLUMN_SHOW_ID
+            WtaContract.SeasonEntry.COLUMN_EPISODE_COUNT
     };
     // These indices are tied to SEASON_COLUMNS. If SEASON_COLUMNS changes, these must change too.
     public static final int COL_ID = 0;
     public static final int COL_SEASON_NUMBER = 1;
     public static final int COL_SEASON_AIRED_EPISODES = 2;
     public static final int COL_SEASON_EPISODE_COUNT = 3;
-    public static final int COL_SHOW_ID = 4;
 
     @BindView(R.id.showSeasonsList)
     ExpandableListView mShowSeasonsListView;

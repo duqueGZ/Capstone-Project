@@ -41,10 +41,10 @@ public class CommentsAdapter extends CursorAdapter {
 
         String commentUser = cursor.getString(ShowCommentsFragment.COL_USER);
         viewHolder.commentUser.setText(commentUser);
-        Long createdAtDate = cursor.getLong(ShowCommentsFragment.COL_CREATED_AT);
-        if (createdAtDate==null) {
+        if (cursor.isNull(ShowCommentsFragment.COL_CREATED_AT)) {
             viewHolder.commentContent.setText(context.getString(R.string.unknown_date));
         } else {
+            Long createdAtDate = cursor.getLong(ShowCommentsFragment.COL_CREATED_AT);
             SimpleDateFormat sdf = new SimpleDateFormat(context.getString(R.string.sdf_with_hour_format));
             String commentDate = sdf.format(new Date(createdAtDate));
             viewHolder.commentDate.setText(commentDate);

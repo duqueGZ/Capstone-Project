@@ -34,8 +34,6 @@ import butterknife.Unbinder;
 public class EpisodeDetailFragment extends Fragment
         implements WtaDetailFragment, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String LOG_TAG = EpisodeDetailFragment.class.getSimpleName();
-
     private static final int DETAIL_EPISODE_LOADER_ID = 9;
 
     private static final String[] EPISODE_COLUMNS = {

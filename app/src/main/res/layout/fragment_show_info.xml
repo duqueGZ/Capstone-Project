@@ -17,6 +17,7 @@
 
             <ImageView
                 android:id="@+id/showPoster"
+                android:focusable="true"
                 android:layout_height="match_parent"
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="@dimen/show_details_margin"
@@ -32,12 +33,14 @@
 
                 <TextView
                     style="@style/CustomMediumItalicTextView"
+                    android:focusable="true"
                     android:id="@+id/showStatus"
                     android:layout_width="match_parent"
                     tools:text="On course"/>
 
                 <TextView
                     style="@style/CustomLargeBoldTextView"
+                    android:focusable="true"
                     android:id="@+id/showRating"
                     android:layout_width="match_parent"
                     android:textSize="@dimen/rating_text_size"
@@ -45,12 +48,14 @@
 
                 <TextView
                     style="@style/CustomSmallTextView"
+                    android:focusable="true"
                     android:id="@+id/showVoteCount"
                     android:layout_width="match_parent"
                     tools:text="(1000 votes)"/>
 
                 <TextView
                     style="@style/CustomMediumBoldTextView"
+                    android:focusable="true"
                     android:id="@+id/showFirstAiredLabel"
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/show_details_margin"
@@ -58,12 +63,14 @@
 
                 <TextView
                     style="@style/CustomSmallTextView"
+                    android:focusable="true"
                     android:id="@+id/showFirstAired"
                     android:layout_width="match_parent"
                     tools:text="12/12/2006"/>
 
                 <TextView
                     style="@style/CustomMediumBoldTextView"
+                    android:focusable="true"
                     android:id="@+id/showGenresLabel"
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/show_details_margin"
@@ -71,6 +78,7 @@
 
                 <TextView
                     style="@style/CustomSmallTextView"
+                    android:focusable="true"
                     android:id="@+id/showGenres"
                     android:layout_width="match_parent"
                     tools:text="Sci-Fi, Terror, Drama, Comedy, Adventures, Cartoons"/>

@@ -15,7 +15,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +33,6 @@ import butterknife.Unbinder;
 
 public class ShowDetailFragment extends Fragment
         implements WtaDetailFragment, LoaderManager.LoaderCallbacks<Cursor> {
-
-    private static final String LOG_TAG = ShowDetailFragment.class.getSimpleName();
 
     private static final int DETAIL_SHOW_LOADER_ID = 6;
 

@@ -2,13 +2,12 @@ package com.nanodegree.android.watchthemall;
 
 import android.app.Application;
 
-import com.bumptech.glide.request.target.ViewTarget;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 /**
- * Custom application context class.*
+ * Custom application context class.
  * It contains Analytics tracker single instance (mTracker)
  */
 public class App extends Application {
@@ -22,7 +21,6 @@ public class App extends Application {
 
         // Does the Tracker already exist?
         // If not, create it
-
         if (mTracker == null) {
             GoogleAnalytics ga = GoogleAnalytics.getInstance(this);
 

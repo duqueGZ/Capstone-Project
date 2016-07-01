@@ -5,6 +5,16 @@
     <string name="content_authority" translatable="false">com.nanodegree.android.watchthemall</string>
     <string name="unknown_date">Unknown date</string>
     <string name="unknown_runtime">Unknown air runtime</string>
+    <string name="unknown_user">Unknown user</string>
+    <string name="unknown_air_info">No air info available</string>
+    <string name="unknown_air_day">Unknown air day</string>
+    <string name="unknown_air_time">Unknown air time</string>
+    <string name="unknown_air_timezone">Unknown air timezone</string>
+    <string name="unknown_title">Unknown title</string>
+    <string name="unknown_overview">No overview available</string>
+    <string name="unknown_network">Unknown air network</string>
+    <string name="unknown_language">Unknown language</string>
+    <string name="unknown_status">Unknown current show status</string>
 
     <!-- Menus strings -->
     <string name="navigation_drawer_watchlist_series">My series watchlist</string>
@@ -14,7 +24,7 @@
     <string name="action_about">About</string>
 
     <!-- Main activity (search screen) -->
-    <string name="search_hint">Introduce your search here...</string>
+    <string name="search_hint">Introduce your search here&#8230;</string>
     <string name="empty_search_keywords_error">Please, introduce some keywords to your search</string>
 
     <!-- Search results screen -->
@@ -76,7 +86,7 @@
 
     <!-- Content descriptions -->
     <string name="show_poster">Show poster</string>
-    <string name="wta_logo">App logo</string>
+    <string name="wta_logo">WatchThemAll logo</string>
     <string name="search">Search</string>
     <string name="no_show_data">No show data available</string>
     <string name="show_banner">Show banner</string>
