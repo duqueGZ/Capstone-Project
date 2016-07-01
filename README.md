@@ -47,7 +47,7 @@ android {
 
 **The app is currently in development process. Latest version is 1.0 (which has been submitted as final project for Udacity Android Nanodegree)**
 
-Some features from the above list has not been covered yet. Here there is some of the future lines for this project:
+Some features from the above list has not been covered yet. Here there are some of the future lines for this project:
 
 - Make it possible to the user to introduce a personal mark for each collected show or episode.
 - Make it configurable the initial screen when the user opens the app (and also include a loading splash).
