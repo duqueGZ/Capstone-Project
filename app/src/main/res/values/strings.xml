@@ -92,6 +92,11 @@
     <string name="title_widget_popular_shows">WTA Popular Shows</string>
     <string name="no_info_available">No shows data available</string>
 
+    <!-- Google Ads -->
+    <string name="banner_ad_unit_id" translatable="false">
+        ca-app-pub-3940256099942544/6300978111
+    </string>
+
     <!-- Other strings -->
     <string name="sdf_format">yyyy-MM-dd</string>
     <string name="sdf_with_hour_format">yyyy-MM-dd HH:mm:ss</string>

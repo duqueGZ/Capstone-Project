@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.nanodegree.android.watchthemall.sync.WtaSyncAdapter;
 import com.nanodegree.android.watchthemall.util.Utility;
 
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
     @BindView(R.id.left_drawer)
     ListView mDrawerList;
+    @BindView(R.id.adView)
+    AdView mAdView;
 
     private String[] mNavigationDrawerOptions;
 
@@ -46,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 R.layout.main_drawer_list_item, mNavigationDrawerOptions));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
 
         WtaSyncAdapter.initializeSyncAdapter(this);
     }
