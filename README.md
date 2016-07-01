@@ -25,8 +25,6 @@ This app is intended to TV series lovers, specially to those people who want to 
 - Personally configure some application settings: default order used in the results screen, initial screen opened when starting the app, etc.
 
 ## IMPORTANT
-
-**The app is currently in development process and it is NOT IN A WORKING STATE**
  
 In order to get WatchThemAll app correctly working is needed to configure and use a trakt.tv API KEY.  
 To get one, you must sign up for an account (https://trakt.tv/auth/join) and then register your own API app (https://trakt.tv/oauth/applications/new). This way, you will get a Client ID associated to your API app.  
@@ -47,3 +45,18 @@ android {
 ...
 ```
 
+**The app is currently in development process. Latest version is 1.0 (which has been submitted as final project for Udacity Android Nanodegree)**
+
+Some features from the above list has not been covered yet. Here there is some of the future lines for this project:
+
+- Make it possible to the user to introduce a personal mark for each collected show or episode.
+- Make it configurable the initial screen when the user opens the app (and also include a loading splash).
+- Include improvements in the navigation drawer (in main screen) and the available options.
+- Include internationalization also for the data comming from Trakt API that could be automatically translated to the supported languages (for now, spanish)
+- Data backup through Drive or Dropbox
+- Make it possible to use some filters in series search
+- App free and paid variants
+- Sharing functionality for both shows and episodes
+- Notifications
+- Watch faces
+- Trakt account integration and more operations with the API
