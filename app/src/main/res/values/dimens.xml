@@ -18,6 +18,7 @@
     <dimen name="show_seasons_padding">40dp</dimen>
     <dimen name="show_episodes_padding">60dp</dimen>
     <dimen name="episode_status_icon_padding">10dp</dimen>
+    <dimen name="show_card_elevation">5dp</dimen>
 
 </resources>
 

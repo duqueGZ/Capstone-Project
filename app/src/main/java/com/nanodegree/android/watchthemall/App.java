@@ -8,21 +8,12 @@ import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 /**
- * Custom application context class.
- * Created as a workaround to solve Glide problems with ViewHolders and 'setTag' (used in
- * WatchThemAll app in custom CursorAdapters)
- * See: http://stackoverflow.com/questions/34833627/error-you-must-not-call-settag-on-a-view-glide-is-targeting-when-use-glide/35096552#35096552
- * Also contains Analytics tracker single instance (mTracker)
+ * Custom application context class.*
+ * It contains Analytics tracker single instance (mTracker)
  */
 public class App extends Application {
 
     public Tracker mTracker;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ViewTarget.setTagId(R.id.glide_tag);
-    }
 
     // Get the tracker associated with this app
     public void startTracking() {

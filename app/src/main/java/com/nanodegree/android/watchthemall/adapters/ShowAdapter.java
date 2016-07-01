@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.nanodegree.android.watchthemall.R;
@@ -46,6 +47,7 @@ public class ShowAdapter extends CursorAdapter {
             Glide.with(mContext).load(R.drawable.no_show_poster)
                     .crossFade().into(viewHolder.posterView);
         }
+        viewHolder.titleView.setText(cursor.getString(ShowsFragment.COL_TITLE));
     }
 
     /**
@@ -53,9 +55,11 @@ public class ShowAdapter extends CursorAdapter {
      */
     private static class ViewHolder {
         public final ImageView posterView;
+        public final TextView titleView;
 
         public ViewHolder(View view) {
             posterView = (ImageView) view.findViewById(R.id.grid_item_show_poster);
+            titleView = (TextView) view.findViewById(R.id.grid_item_show_title);
         }
     }
 }

@@ -33,11 +33,13 @@ public class ShowsFragment extends Fragment
 
     private static final String[] SHOW_COLUMNS = {
             WtaContract.ShowEntry._ID,
-            WtaContract.ShowEntry.COLUMN_POSTER_PATH
+            WtaContract.ShowEntry.COLUMN_POSTER_PATH,
+            WtaContract.ShowEntry.COLUMN_TITLE
     };
     // These indices are tied to SHOW_COLUMNS. If SHOW_COLUMNS changes, these must change too.
     public static final int COL_ID = 0;
     public static final int COL_POSTER_PATH = 1;
+    public static final int COL_TITLE = 2;
 
     private ShowAdapter mShowAdapter;
     private boolean mUseTwoPaneLayout;
@@ -99,6 +101,7 @@ public class ShowsFragment extends Fragment
                 mSelectedPosition = i;
             }
         });
+
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent,
                 R.color.colorPrimaryLight, R.color.colorPrimaryLighter, R.color.colorPrimaryDark);

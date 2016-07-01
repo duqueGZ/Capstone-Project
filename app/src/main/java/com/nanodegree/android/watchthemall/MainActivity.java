@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     AdView mAdView;
 
     private String[] mNavigationDrawerOptions;
+    private CustomRunnable mCloseDrawerRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,21 @@ public class MainActivity extends AppCompatActivity {
         ((App) getApplication()).startTracking();
 
         WtaSyncAdapter.initializeSyncAdapter(this);
+
+        if (savedInstanceState==null) {
+            mDrawerLayout.openDrawer(Gravity.LEFT);
+            mCloseDrawerRunnable = new CustomRunnable(mDrawerLayout);
+            mDrawerLayout.postDelayed(mCloseDrawerRunnable, 1000);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mCloseDrawerRunnable!=null) {
+            mDrawerLayout.removeCallbacks(mCloseDrawerRunnable);
+            mCloseDrawerRunnable = null;
+        }
     }
 
     @Override
@@ -93,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             if ((position!=ListView.INVALID_POSITION)&&(position<mNavigationDrawerOptions.length)) {
                 String selectedOption = mNavigationDrawerOptions[position];
-                // navigation_drawer_watchlist
+                
                 if ((selectedOption.equals(getString(R.string.navigation_drawer_watchlist_series))) ||
                         (selectedOption.equals(getString(R.string.navigation_drawer_watching_series))) ||
                         (selectedOption.equals(getString(R.string.navigation_drawer_watched_series)))) {
@@ -108,6 +125,21 @@ public class MainActivity extends AppCompatActivity {
             }
             mDrawerList.setItemChecked(position, Boolean.FALSE);
             mDrawerLayout.closeDrawer(mDrawerList);
+        }
+    }
+
+    private class CustomRunnable implements Runnable {
+
+        private DrawerLayout mDrawer;
+
+        public CustomRunnable(DrawerLayout drawer) {
+            this.mDrawer = drawer;
+        }
+
+        @Override
+        public void run() {
+            mDrawer.closeDrawer(Gravity.LEFT);
+            MainActivity.this.mCloseDrawerRunnable = null;
         }
     }
 }

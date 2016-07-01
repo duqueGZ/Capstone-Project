@@ -9,6 +9,8 @@
     <LinearLayout
         style="@style/CustomRootLayout"
         android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         tools:context="com.nanodegree.android.watchthemall.MainActivity">
 
         <LinearLayout
