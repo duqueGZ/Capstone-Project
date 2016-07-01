@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         mAdView.loadAd(adRequest);
 
+        // Make sure that Analytics tracking has started
+        ((App) getApplication()).startTracking();
+
         WtaSyncAdapter.initializeSyncAdapter(this);
     }
 
