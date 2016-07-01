@@ -29,6 +29,7 @@
     <string name="show_info_tab">INFO</string>
     <string name="show_seasons_tab">TEMPORADAS</string>
     <string name="show_comments_tab">COMENTARIOS</string>
+    <string name="minute_label">min</string>
     <string name="episodes">episodios</string>
     <string name="various_characters">Varios</string>
     <string name="empty_comment_list">No se ha podido recuperar ningún comentario</string>
